@@ -307,7 +307,7 @@ const DATA = /*__IR_JSON__*/null;
 
   const notice = document.createElement("p");
   notice.className = "sm";
-  notice.textContent = DATA.validation.scope + " 검토 상태: " + Object.entries(DATA.validation.semantic).map(([stage,status]) => stage + "=" + status).join(" · ") + "。" + DATA.validation.review_origin + "。" + DATA.validation.external.note;
+  notice.textContent = DATA.validation.scope + " 작성 원칙: ASD-STE100 참고 · 공식 준수 미검증. 검토 상태: " + Object.entries(DATA.validation.semantic).map(([stage,status]) => stage + "=" + status).join(" · ") + "。" + DATA.validation.review_origin + "。" + DATA.validation.external.note;
   $("#gates").after(notice);
   if (DATA.explanation_plan) {
     const plan = document.createElement("p");

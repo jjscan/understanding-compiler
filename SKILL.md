@@ -72,6 +72,9 @@ python3 <스킬>/scripts/segment-source.py understanding/<slug>/source.md --mode
 → `claim-ir.json` 골격 생성. `source.units[]`에 문단·목록 항목·표 행마다 `P01, P02…` 단위 ID와 행 번호가 붙는다. 이 ID가 `source_location`이다.
 
 ### [1] Claim Parser + [2] Language Normalizer
+카파시의 완화된 ASD-STE100 제안은 Claim과 최종 설명 모두에 적용한다.
+원문 인용은 그대로 두고 쉬운 단어·짧은 문장·같은 대상의 같은 이름·명확한 행위자를 우선한다.
+조건·유보·시제·원인 관계를 지우거나 새 행위자를 추가하지 않는다. “80%”를 준수 점수로 보고하지 않는다.
 `references/ste-guidelines.md`를 Read. 각 단위에서 주장을 뽑아 `claims[]`에 넣는다.
 - 한 Claim = 한 의미. "A하고 B하므로 C에 적합하다" → A / B / C(평가적 판단은 반드시 별도 Claim).
 - `source_text`는 해당 단위에서 **그대로 복사한 연속 구간**이다(검증기가 대조한다). `text`는 STE 원칙으로 다시 쓴 문장이다.

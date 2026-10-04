@@ -1,3 +1,4 @@
+> ASD-STE100 참고 작성 · 공식 준수 미검증
 > 구조·참조 검사 통과. 의미 정확성・주장 누락・외부 사실의 참 여부를 보장하지 않음.
 
 검토 상태: {"source_to_claim": "not-reviewed", "claim_to_narrative": "not-reviewed", "coverage": "not-reviewed", "reader_flow": "not-reviewed"}
@@ -390,3 +391,5 @@ _애니메이션 후보 없음 — 정적 표현으로 충분하다._
 
 - `G1` explanation_plan: 독자 중심 설명 기획이 없다. 기존 IR 호환을 위해 경고로 표시한다
 - `G3` C13: review_note 에 원문에 없는 숫자 ['3.4'] — 계산한 값이면 계산식을 함께 적는다
+- `G1` narrative.headline: STE 참고: 설명 문장이 26어절(한국어 적용 지침)이다 (25 이하 권장)
+- `G3` narrative.headline: STE 참고: '멘토 페어링을 운영한 원격 팀'와 대표 이름 '멘토 페어링 원격 팀'의 용어 일관성을 검토한다

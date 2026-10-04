@@ -1,3 +1,4 @@
+> ASD-STE100 참고 작성 · 공식 준수 미검증
 > 구조·참조 검사 통과. 의미 정확성・주장 누락・외부 사실의 참 여부를 보장하지 않음.
 
 검토 상태: {"source_to_claim": "not-reviewed", "claim_to_narrative": "not-reviewed", "coverage": "not-reviewed", "reader_flow": "not-reviewed"}
@@ -379,3 +380,4 @@ _없음_
 남은 경고 (Gate를 막지 않지만 사람이 판단할 것):
 
 - `G1` explanation_plan: 독자 중심 설명 기획이 없다. 기존 IR 호환을 위해 경고로 표시한다
+- `G3` N04.b1.s2: STE 참고: '인덱스'와 대표 이름 '벡터 인덱스'의 용어 일관성을 검토한다

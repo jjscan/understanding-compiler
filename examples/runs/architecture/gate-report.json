@@ -1,6 +1,13 @@
 {
   "validation": {
     "scope": "구조·참조 검사 통과. 의미 정확성・주장 누락・외부 사실의 참 여부를 보장하지 않음.",
+    "writing": {
+      "profile": "ASD-STE100-inspired",
+      "formal_compliance": "not-assessed",
+      "dictionary": "not-validated",
+      "word_count": "heuristic",
+      "note": "카파시의 완화된 STE 제안 적용. 한국어는 명료성 원칙의 적용이며 공식 STE 영어 준수가 아님"
+    },
     "semantic": {
       "source_to_claim": "not-reviewed",
       "claim_to_narrative": "not-reviewed",
@@ -100,7 +107,13 @@
       "gate": "G1",
       "where": "explanation_plan",
       "msg": "독자 중심 설명 기획이 없다. 기존 IR 호환을 위해 경고로 표시한다"
+    },
+    {
+      "level": "warning",
+      "gate": "G3",
+      "where": "N04.b1.s2",
+      "msg": "STE 참고: '인덱스'와 대표 이름 '벡터 인덱스'의 용어 일관성을 검토한다"
     }
   ],
-  "built": "2026-10-04T12:16:40"
+  "built": "2026-10-04T13:22:36"
 }

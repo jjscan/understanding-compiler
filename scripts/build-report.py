@@ -489,7 +489,7 @@ def main() -> None:
     tpl_name = "inspect-report.md" if mode == "inspect" else "understanding-report.md"
     validation = review_status(ir)
     report = fill((TEMPLATES / tpl_name).read_text(encoding="utf-8"), values)
-    report = "> " + validation["scope"] + "\n\n" + "검토 상태: " + json.dumps(validation["semantic"], ensure_ascii=False) + "\n\n" + validation["review_origin"] + " · " + validation["external"]["note"] + "\n\n" + report
+    report = "> ASD-STE100 참고 작성 · 공식 준수 미검증\n> " + validation["scope"] + "\n\n" + "검토 상태: " + json.dumps(validation["semantic"], ensure_ascii=False) + "\n\n" + validation["review_origin"] + " · " + validation["external"]["note"] + "\n\n" + report
     (out / "report.md").write_text(report, encoding="utf-8")
 
     # viewer.html

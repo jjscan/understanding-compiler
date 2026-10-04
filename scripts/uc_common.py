@@ -290,9 +290,44 @@ def review_status(ir: dict) -> dict:
     reviews = ir.get("reviews") or {}
     return {
         "scope": VALIDATION_SCOPE,
+        "writing": {"profile": "ASD-STE100-inspired", "formal_compliance": "not-assessed",
+                    "dictionary": "not-validated", "word_count": "heuristic",
+                    "note": "카파시의 완화된 STE 제안 적용. 한국어는 명료성 원칙의 적용이며 공식 STE 영어 준수가 아님"},
         "semantic": {stage: (reviews.get(stage) or {}).get("status", "not-reviewed")
                      for stage in ("source_to_claim", "claim_to_narrative", "coverage", "reader_flow")},
         "review_origin": "작성자가 기록한 검토 상태이며 자동 의미 검증 결과가 아님",
         "external": {"status": "recorded-unverified" if any(c.get("verification") for c in ir.get("claims", [])) else "not-performed",
                      "note": "외부 확인 기록의 형식만 검사하며 실제 조회 수행·출처의 진위는 보장하지 않음"},
     }
+
+
+STE_ADVISORY_WORDS = {"utilize": "use", "commence": "start", "prior to": "before", "in order to": "to"}
+
+
+def check_ste_style(iss: Issues, where: str, text: str, procedural: bool = False,
+                    entities: list[dict] | None = None) -> None:
+    """STE 참고 편집 검사. 공식 사전·품사·단어 계수·의미 검증이 아닌 휴리스틱."""
+    if not text:
+        return
+    korean = bool(re.search(r"[가-힣]", text))
+    limit = 20 if procedural else 25
+    for sentence in re.split(r"(?<=[.!?。])\s+", norm(text)):
+        count = word_count(sentence)
+        if count > limit:
+            unit = "어절(한국어 적용 지침)" if korean else "공백 단위(공식 STE 단어 계수 아님)"
+            iss.warn("G1", where, f"STE 참고: {'절차' if procedural else '설명'} 문장이 {count}{unit}이다 ({limit} 이하 권장)")
+    if PRONOUN_START.match(norm(text)):
+        iss.warn("G3", where, "STE 참고: 대명사의 대상이 명확한지 확인하고 필요한 경우 원문에 있는 대상 이름을 쓴다")
+    if not korean:
+        for phrase, alternative in STE_ADVISORY_WORDS.items():
+            if re.search(r"\b" + re.escape(phrase) + r"\b", text, re.I):
+                iss.warn("G1", where, f"STE 참고: '{phrase}'를 '{alternative}'로 바꿔도 원문의 의미가 유지되는지 검토한다 (공식 사전 판정 아님)")
+        if procedural and re.search(r"\b(?:is|are|was|were|be|been)\s+(?:\w+ed|written|given|done|made|shown)\b", text, re.I):
+            iss.warn("G1", where, "STE 참고: 절차의 수동태 후보다. 원문에 행위자가 있을 때만 능동 표현으로 바꾼다")
+    for entity in entities or []:
+        name = entity.get("name", "")
+        for alias in entity.get("aliases") or []:
+            if norm(alias).lower() == norm(name).lower():
+                continue
+            if re.search(r"(?<![A-Za-z0-9_])" + re.escape(alias) + r"(?![A-Za-z0-9_])", text, re.I) and name.lower() not in text.lower():
+                iss.warn("G3", where, f"STE 참고: '{alias}'와 대표 이름 '{name}'의 용어 일관성을 검토한다")

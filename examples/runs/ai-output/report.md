@@ -1,3 +1,4 @@
+> ASD-STE100 참고 작성 · 공식 준수 미검증
 > 구조·참조 검사 통과. 의미 정확성・주장 누락・외부 사실의 참 여부를 보장하지 않음.
 
 검토 상태: {"source_to_claim": "not-reviewed", "claim_to_narrative": "not-reviewed", "coverage": "not-reviewed", "reader_flow": "not-reviewed"}
@@ -402,3 +403,4 @@ _애니메이션 후보 없음 — 정적 표현으로 충분하다._
 남은 경고:
 
 - `G1` explanation_plan: 독자 중심 설명 기획이 없다. 기존 IR 호환을 위해 경고로 표시한다
+- `G1` N01.b1: STE 참고: 설명 문단이 6문장을 넘는다. 한 주제씩 문단을 나누는지 검토한다

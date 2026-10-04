@@ -14,7 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from uc_common import (  # noqa: E402
     ATTRIBUTION_RE, CAUSAL_CONNECTIVE, COMPARATIVE_RE, EDGE_BACKING, EDGE_KINDS, SUMMARY_HEDGE_MARKERS, Issues, emit,
-    entity_aliases, has_hedge, ko_counts,
+    check_ste_style, entity_aliases, has_hedge, ko_counts,
     index, label_mentioned, load_ir, norm, numbers, source_numbers, weakest,
 )
 
@@ -234,6 +234,9 @@ def _check_sentence(iss: Issues, where: str, s: dict, ix: dict, ctx: dict, requi
             iss.error("G4", where, f"없는 inference 참조: {i}")
         else:
             infs.append(inf)
+    check_ste_style(iss, where, text,
+                    procedural=bool(cs) and all("procedure" in c.get("type", []) for c in cs),
+                    entities=list(ix["entities"].values()))
     # 해석 문장의 숫자·개수는 해석이 기대는 Claim 에서만 올 수 있다
     inf_basis = _evidence_text([ix["claims"][r] for inf in infs for r in inf.get("based_on") or [] if r in ix["claims"]]) \
         + " " + " ".join(inf.get("text", "") for inf in infs)
@@ -331,6 +334,9 @@ def _check_narrative(iss: Issues, ir: dict, ix: dict) -> None:
             if kind in ("text", "points", "callout"):
                 if not b.get("sentences"):
                     iss.error("G2", where, "문장이 없다")
+                if kind == "text" and sum(len(re.split(r"(?<=[.!?。])\s+", norm(item.get("text", ""))))
+                                          for item in b.get("sentences") or []) > 6:
+                    iss.warn("G1", where, "STE 참고: 설명 문단이 6문장을 넘는다. 한 주제씩 문단을 나누는지 검토한다")
                 for s_i, s in enumerate(b.get("sentences") or [], 1):
                     sent(f"{where}.s{s_i}", s)
             elif kind == "example":

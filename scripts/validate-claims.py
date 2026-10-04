@@ -17,7 +17,7 @@ from uc_common import (  # noqa: E402
     PRONOUN_START, RISK, VISUALIZATION, Issues, emit, has_hedge, index, load_ir, norm, numbers,
     sentence_count, source_numbers, strip_known_identifiers, unit_ids_in, word_count,
 )
-from uc_common import check_source, REVIEW_STATES, NARRATIVE_DEPTHS
+from uc_common import check_ste_style, check_source, REVIEW_STATES, NARRATIVE_DEPTHS
 from uc_common import _tokens  # noqa: E402
 
 ID_RE = {
@@ -201,11 +201,7 @@ def check(ir: dict) -> Issues:
         if txt:
             if sentence_count(txt) > 1:
                 iss.warn("G1", cid, "text 가 두 문장 이상이다 — 한 Claim 한 의미")
-            wc = word_count(txt)
-            if wc > 25:
-                iss.warn("G1", cid, f"text 가 {wc}어절이다 (25 이하 권장)")
-            if PRONOUN_START.match(norm(txt)):
-                iss.warn("G3", cid, "대명사로 시작한다 — 대상 이름을 쓴다")
+            check_ste_style(iss, cid, txt, procedural="procedure" in types)
             # 한국어 문장 속 영어 and/because 는 대개 인용한 고유 이름("Punctuation and word counts")이다
             hint_txt = re.sub(r"\b(and|because|so)\b", " ", txt) if re.search(r"[가-힣]", txt) else txt
             if COMPOUND_HINT.search(hint_txt) and "causal" not in types and "conditional" not in types:
