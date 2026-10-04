@@ -1,0 +1,21 @@
+flowchart TD
+  n_User["사용자<br/><small>C02 C03</small>"]
+  n_Orch["Orchestrator<br/><small>C03 C04 C05 C24</small>"]
+  n_Worker["Worker<br/><small>C09 C10 C11</small>"]
+  n_Retr["Retriever<br/><small>C07 C08</small>"]
+  n_Index["벡터 인덱스<br/><small>C07 C20 C21</small>"]
+  n_IB["Index Builder<br/><small>C13 C21</small>"]
+  n_Docs["Confluence·GitHub 문서<br/><small>C13</small>"]
+  n_Draft["초안 답변<br/><small>C10 C12</small>"]
+  n_Verif["Verifier<br/><small>C12</small>"]
+  n_User -->|"질문 · C02 C03"| n_Orch
+  n_Orch -->|"하위 작업 위임 · C06 C09"| n_Worker
+  n_Worker -->|"호출해 문서 조각 받음 · C16"| n_Retr
+  n_Retr -->|"의존·검색 · C07 C20"| n_Index
+  n_IB -->|"만듦 · C21"| n_Index
+  n_Docs -->|"매일 다시 색인 · C13"| n_IB
+  n_Worker -->|"만듦 · C10 C17"| n_Draft
+  n_Verif -->|"문장마다 인용 출처 확인·표시 · C12 C18"| n_Draft
+  n_Draft -->|"합쳐 최종 답변 · C19"| n_Orch
+  classDef ev_model_claim fill:#f1f3f5,stroke:#868e96
+  class n_User,n_Orch,n_Worker,n_Retr,n_Index,n_IB,n_Docs,n_Draft,n_Verif ev_model_claim

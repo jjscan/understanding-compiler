@@ -1,0 +1,106 @@
+{
+  "validation": {
+    "scope": "구조·참조 검사 통과. 의미 정확성・주장 누락・외부 사실의 참 여부를 보장하지 않음.",
+    "semantic": {
+      "source_to_claim": "not-reviewed",
+      "claim_to_narrative": "not-reviewed",
+      "coverage": "not-reviewed",
+      "reader_flow": "not-reviewed"
+    },
+    "review_origin": "작성자가 기록한 검토 상태이며 자동 의미 검증 결과가 아님",
+    "external": {
+      "status": "not-performed",
+      "note": "외부 확인 기록의 형식만 검사하며 실제 조회 수행·출처의 진위는 보장하지 않음"
+    }
+  },
+  "ok": true,
+  "mode": "understand",
+  "gates": {
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3": "PASS",
+    "G4": "PASS",
+    "G5": "PASS",
+    "G6": "PASS"
+  },
+  "counts": {
+    "total": 31,
+    "grounded": 2,
+    "source_needed": 0,
+    "inference": 0,
+    "low_confidence": 2,
+    "inference_in_source": 0,
+    "inference_added": 0,
+    "uncertain": 2,
+    "conflicting": 0,
+    "model_claim": 27,
+    "opinion": 0,
+    "by_evidence": {
+      "verified": 0,
+      "supported": 2,
+      "source-needed": 0,
+      "model-claim": 27,
+      "inference": 0,
+      "opinion": 0,
+      "uncertain": 2,
+      "conflicting": 0
+    },
+    "by_type": {
+      "fact": 11,
+      "relationship": 10,
+      "procedure": 6,
+      "quantitative": 3,
+      "temporal": 2,
+      "conditional": 2,
+      "uncertain": 2,
+      "causal": 2,
+      "prediction": 2,
+      "definition": 1,
+      "comparison": 1
+    },
+    "fact": 11
+  },
+  "review_first": [
+    {
+      "id": "C28",
+      "reason": "불확실 · 근거 없는 인과 · 모호한 표현 · 조건 누락 · 위험 높음"
+    },
+    {
+      "id": "C29",
+      "reason": "작성자 단언 · 근거 없는 강한 단정 · 지나친 일반화 · 위험 높음"
+    },
+    {
+      "id": "C22",
+      "reason": "불확실 · 조건 누락"
+    },
+    {
+      "id": "C24",
+      "reason": "작성자 단언 · 모호한 표현"
+    },
+    {
+      "id": "C26",
+      "reason": "작성자 단언 · 근거 없는 인과"
+    },
+    {
+      "id": "C16",
+      "reason": "작성자 단언 · 이름 불일치"
+    },
+    {
+      "id": "C17",
+      "reason": "작성자 단언 · 이름 불일치"
+    },
+    {
+      "id": "C30",
+      "reason": "작성자 단언 · 이름 불일치"
+    }
+  ],
+  "warnings": [
+    {
+      "level": "warning",
+      "gate": "G1",
+      "where": "explanation_plan",
+      "msg": "독자 중심 설명 기획이 없다. 기존 IR 호환을 위해 경고로 표시한다"
+    }
+  ],
+  "built": "2026-10-04T12:16:40"
+}

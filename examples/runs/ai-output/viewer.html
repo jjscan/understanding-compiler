@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-GdPF1BfCNb0DbRklbF6ymnux0FMNF7YgpgZYnjO2k5Y=' 'sha256-4+rTxLqBxNuiQ8RHkYebX3KCmleWQEuoPeJL4mvtPx0='; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; worker-src 'none'; media-src 'none'; manifest-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>질문: 우리 스타트업은 마이크로서비스로 가야 하나요? · Understanding Report</title>
+<style>
+:root{
+  --bg:#f7f7f5; --panel:#ffffff; --ink:#1d1f21; --ink2:#55595e; --ink3:#868b91; --line:#e3e3df; --soft:#f0f0ec;
+  --accent:#1c5fd1; --accent-soft:#e8f0fd; --mark:#fff1a8;
+  --ok:#2f855a; --ok-bg:#e7f5ec; --warn:#b35c00; --warn-bg:#fff4e0; --bad:#c22f2f; --bad-bg:#fdecec;
+  --info:#5f3dc4; --info-bg:#f1edff; --mute:#5c636a; --mute-bg:#eef0f2;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --sans: "Pretendard", "Apple SD Gothic Neo", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#141517; --panel:#1c1d20; --ink:#e8e9eb; --ink2:#b3b7bc; --ink3:#80858b; --line:#2e3034; --soft:#232428;
+  --accent:#7aa7ff; --accent-soft:#1e2a44; --mark:#5c4d00;
+  --ok:#6bd39a; --ok-bg:#16301f; --warn:#ffb85c; --warn-bg:#3a2a10; --bad:#ff8080; --bad-bg:#3b1a1a;
+  --info:#b4a2ff; --info-bg:#2a2245; --mute:#a7adb3; --mute-bg:#2a2c30;
+}}
+:root[data-theme="dark"]{
+  --bg:#141517; --panel:#1c1d20; --ink:#e8e9eb; --ink2:#b3b7bc; --ink3:#80858b; --line:#2e3034; --soft:#232428;
+  --accent:#7aa7ff; --accent-soft:#1e2a44; --mark:#5c4d00;
+  --ok:#6bd39a; --ok-bg:#16301f; --warn:#ffb85c; --warn-bg:#3a2a10; --bad:#ff8080; --bad-bg:#3b1a1a;
+  --info:#b4a2ff; --info-bg:#2a2245; --mute:#a7adb3; --mute-bg:#2a2c30;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 16px 80px}
+header .kicker{font:600 12px/1 var(--mono);letter-spacing:.14em;color:var(--ink3);text-transform:uppercase}
+header h1{font-size:26px;line-height:1.3;margin:8px 0 6px;letter-spacing:-.01em}
+header .meta{color:var(--ink2);font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gates{margin-top:12px}
+.gate{font:600 11px/1 var(--mono);padding:5px 7px;border-radius:5px;border:1px solid var(--line);background:var(--panel)}
+.gate.PASS{color:var(--ok)} .gate.FAIL{color:var(--bad);border-color:var(--bad)}
+.themebtn{margin-left:auto;font:12px var(--sans);background:var(--panel);color:var(--ink2);border:1px solid var(--line);border-radius:6px;padding:5px 9px;cursor:pointer}
+
+.stats{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin:22px 0 14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:inherit;font:inherit}
+.stat:hover{border-color:var(--accent)}
+.stat .n{font:700 26px/1.1 var(--sans);font-variant-numeric:tabular-nums}
+.stat .l{font-size:12px;color:var(--ink2);margin-top:4px}
+.stat.ok .n{color:var(--ok)} .stat.bad .n{color:var(--bad)} .stat.warn .n{color:var(--warn)} .stat.info .n{color:var(--info)}
+@media (max-width:900px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:520px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.panel h2{font:700 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:0 0 12px}
+.review-item{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:9px 0;border-top:1px solid var(--line);cursor:pointer}
+.review-item:first-of-type{border-top:0}
+.review-item:hover .rt{color:var(--accent)}
+.review-item .rid{font:700 13px var(--mono)}
+.review-item .rr{font-size:12px;color:var(--bad)}
+.review-item .rt{grid-column:2;font-size:14px}
+.sum li{margin:0 0 8px} .sum{padding-left:18px;margin:0}
+
+.tabs{display:flex;gap:2px;margin:26px 0 0;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;font:600 14px var(--sans);color:var(--ink2);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.pane{display:none;padding-top:16px} .pane.on{display:block}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.toolbar input[type=search]{flex:1 1 220px;min-width:0;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit}
+.toolbar select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit}
+.chip{font:600 12px var(--sans);padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink2);cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.countline{font-size:13px;color:var(--ink3);margin:4px 0 10px}
+.filternote{display:none;font-size:13px;background:var(--accent-soft);color:var(--accent);padding:6px 10px;border-radius:8px;margin-bottom:10px}
+.filternote button{background:none;border:0;color:inherit;font-weight:700;cursor:pointer}
+
+.card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--mute);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.card.ev-verified,.card.ev-supported{border-left-color:var(--ok)}
+.card.ev-source-needed,.card.ev-conflicting{border-left-color:var(--bad)}
+.card.ev-uncertain,.card.ev-inference{border-left-color:var(--warn)}
+.card.ev-opinion{border-left-color:var(--info)}
+.card.flash{outline:2px solid var(--accent);outline-offset:2px}
+.card .top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;cursor:pointer}
+.cid{font:700 13px var(--mono)}
+.badge{font:600 11px/1 var(--sans);padding:4px 7px;border-radius:5px;background:var(--mute-bg);color:var(--mute)}
+.badge.verified,.badge.supported{background:var(--ok-bg);color:var(--ok)}
+.badge.source-needed,.badge.conflicting{background:var(--bad-bg);color:var(--bad)}
+.badge.uncertain,.badge.inference{background:var(--warn-bg);color:var(--warn)}
+.badge.opinion{background:var(--info-bg);color:var(--info)}
+.badge.INFERENCE,.badge.INTERPRETATION{background:var(--warn-bg);color:var(--warn);font-family:var(--mono)}
+.type{font:11px var(--mono);color:var(--ink3)}
+.card .txt{margin:6px 0 2px;font-size:15px;cursor:pointer}
+.card .loc{font:12px var(--mono);color:var(--ink3)}
+.card .more{display:none;margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+.card.open .more{display:block}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:640px){.cmp{grid-template-columns:1fr}}
+.cmp div{background:var(--soft);border-radius:8px;padding:8px 10px;font-size:14px}
+.cmp .h{font:600 11px var(--mono);color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;background:none;padding:0}
+.kv{font-size:13px;color:var(--ink2);margin-top:8px}
+.kv b{color:var(--ink)}
+.note{font-size:13px;background:var(--bad-bg);color:var(--bad);border-radius:6px;padding:6px 9px;margin-top:8px}
+.btn{font:600 12px var(--sans);padding:6px 10px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--accent);cursor:pointer;margin:8px 6px 0 0}
+
+.vis{margin-bottom:22px}
+.vis h3{font-size:16px;margin:0 0 8px}
+.diagram{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto;text-align:center}
+.diagram svg{max-width:100%;height:auto}
+.diagram g.node{cursor:pointer}
+.diagram g.node.hl rect,.diagram g.node.hl polygon,.diagram g.node.hl circle,.diagram g.node.hl path{stroke:var(--accent)!important;stroke-width:4px!important}
+.diagram pre{text-align:left;font:12px var(--mono);white-space:pre-wrap}
+table{border-collapse:collapse;width:100%;font-size:13px;background:var(--panel)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600}
+.tablewrap{overflow-x:auto;margin-top:8px}
+td .cref{font:600 12px var(--mono);color:var(--accent);cursor:pointer;text-decoration:underline dotted}
+.legend{font-size:12px;color:var(--ink3);margin:6px 0 0}
+ol.flow{padding-left:22px} ol.flow li{margin-bottom:6px}
+
+.unit{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:8px 10px;border-radius:8px;border:1px solid transparent}
+.unit .uid{font:600 12px var(--mono);color:var(--ink3);padding-top:2px}
+.unit.heading .ut{font-weight:700;font-size:16px}
+.unit.code .ut{font:12px var(--mono);white-space:pre-wrap;color:var(--ink2)}
+.unit.focus{border-color:var(--accent);background:var(--accent-soft)}
+.unit.skipped .ut{color:var(--ink3)}
+.unit .uc{margin-top:4px;display:flex;gap:4px;flex-wrap:wrap}
+mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 1px}
+.sm{font-size:12px;color:var(--ink3)}
+.warnlist li{font-size:13px;margin-bottom:4px}
+code{font-family:var(--mono);font-size:.92em}
+
+/* ---------- 모드 전환 */
+.modes{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-left:auto}
+.modes button{background:var(--panel);color:var(--ink2);border:0;padding:6px 12px;font:600 13px var(--sans);cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.themebtn{margin-left:8px}
+[hidden]{display:none!important}
+
+/* ---------- 읽기 페이지 */
+:root{--ctx:#0b7285;--ctx-bg:#e3f6f8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ctx:#66d9e8;--ctx-bg:#0f2f34}}
+:root[data-theme="dark"]{--ctx:#66d9e8;--ctx-bg:#0f2f34}
+.read{display:grid;grid-template-columns:1fr;gap:32px;margin-top:28px}
+@media (min-width:1080px){.read{grid-template-columns:200px minmax(0,1fr)}}
+.toc{display:none}
+@media (min-width:1080px){.toc{display:block;position:sticky;top:24px;align-self:start;font-size:13px}}
+.toc a{display:block;color:var(--ink2);text-decoration:none;padding:5px 0 5px 10px;border-left:2px solid var(--line)}
+.toc a:hover{color:var(--accent);border-left-color:var(--accent)}
+.toc .tt{font:600 11px var(--mono);letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;margin-bottom:8px}
+article.essay{max-width:720px;font-size:17px;line-height:1.85}
+.headline{font-size:22px;line-height:1.55;font-weight:700;letter-spacing:-.01em;margin:0 0 10px;padding:18px 20px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
+.howto{font-size:13px;color:var(--ink3);margin:0 0 28px;line-height:1.6}
+.howto .k{display:inline-block;margin-right:10px;white-space:nowrap}
+article.essay h2{font-size:21px;margin:42px 0 12px;letter-spacing:-.01em;scroll-margin-top:20px}
+article.essay p{margin:0 0 16px}
+article.essay ul.pts{margin:0 0 16px;padding-left:22px}
+article.essay ul.pts li{margin-bottom:8px}
+.s{border-radius:3px}
+.s.w-bad{text-decoration:underline dotted var(--bad) 2px;text-underline-offset:4px}
+.s.w-warn{text-decoration:underline dotted var(--warn) 2px;text-underline-offset:4px}
+.s.w-op{text-decoration:underline dotted var(--info) 2px;text-underline-offset:4px}
+.s.ctx{background:var(--ctx-bg);box-shadow:0 0 0 2px var(--ctx-bg)}
+.s.inf{background:var(--warn-bg);box-shadow:0 0 0 2px var(--warn-bg)}
+sup.cite.ic{color:var(--warn)}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;font-weight:600}
+.example{border:1px solid var(--line);border-radius:10px;background:var(--panel);margin:18px 0;overflow:hidden}
+.example .eh{font:600 12px var(--mono);letter-spacing:.06em;color:var(--ink3);padding:9px 14px;border-bottom:1px solid var(--line);background:var(--soft)}
+.example .ei{padding:10px 14px;border-top:1px solid var(--line);font-size:15px;line-height:1.6}
+.example .ei:first-of-type{border-top:0}
+.example .el{display:block;font-size:12px;color:var(--ink3);margin-bottom:3px}
+.example code{font-size:14px;white-space:pre-wrap;word-break:break-word}
+.seccheck{font-size:14px;color:var(--ink2);border:1px dashed var(--bad);border-radius:10px;padding:10px 14px;margin:6px 0 10px}
+.seccheck b{color:var(--bad);font-size:12px;letter-spacing:.04em}
+.seccheck button{display:block;text-align:left;background:none;border:0;padding:3px 0;font:inherit;color:inherit;cursor:pointer}
+.seccheck button:hover{color:var(--accent)}
+.s.flash{background:var(--mark)}
+sup.cite{font:600 10.5px var(--mono);color:var(--accent);cursor:pointer;margin-left:2px;white-space:nowrap;vertical-align:super;line-height:0}
+sup.cite.kc{color:var(--ctx)}
+sup.cite:hover{text-decoration:underline}
+figure.fig{margin:22px 0 26px;font-size:14px;line-height:1.6}
+figure.fig .diagram svg{max-height:640px}
+figure.fig figcaption{font-size:13px;color:var(--ink2);margin-top:8px}
+figure.fig details{margin-top:8px;font-size:13px}
+figure.fig summary{cursor:pointer;color:var(--ink3)}
+.checks{margin-top:46px;padding-top:8px;border-top:1px solid var(--line)}
+.checks .ck{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--bad);border-radius:10px;padding:12px 14px;margin-bottom:10px;cursor:pointer;font-size:15px;line-height:1.6}
+.checks .ck:hover{border-color:var(--accent)}
+.checks .ck .why{display:block;font-size:13px;color:var(--ink2);margin-top:4px}
+.ctxlist{margin-top:30px;background:var(--ctx-bg);border-radius:12px;padding:14px 18px;font-size:14px;line-height:1.7}
+.ctxlist h3{margin:0 0 6px;font-size:13px;color:var(--ctx);letter-spacing:.04em}
+.ctxlist dt{font-weight:700;margin-top:8px}
+.ctxlist dd{margin:0}
+.tolink{margin:36px 0 0;font-size:14px;color:var(--ink2)}
+.tolink button{font:600 14px var(--sans);color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+
+/* ---------- 근거 패널 */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:var(--panel);border-left:1px solid var(--line);box-shadow:-12px 0 32px rgba(0,0,0,.12);padding:18px 18px 40px;overflow-y:auto;z-index:20;transform:translateX(100%);transition:transform .18s ease}
+.drawer.open{transform:none}
+@media (max-width:640px){.drawer{top:auto;width:100vw;height:72vh;border-left:0;border-top:1px solid var(--line);border-radius:14px 14px 0 0;transform:translateY(100%)}}
+.drawer .dh{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.drawer .dh b{font-size:14px}
+.drawer .x{margin-left:auto;background:none;border:1px solid var(--line);border-radius:6px;color:var(--ink2);cursor:pointer;padding:3px 9px;font:inherit}
+.dc{border-top:1px solid var(--line);padding:12px 0}
+.dc .q{font-size:14px;background:var(--soft);border-radius:8px;padding:8px 10px;margin:8px 0;font-style:italic}
+.dc .lab{font:600 11px var(--mono);color:var(--ink3);text-transform:uppercase;letter-spacing:.08em}
+.dc.k{border-left:3px solid var(--ctx);padding-left:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="row"><span class="kicker" id="kicker">Understanding Report</span>
+      <span class="modes" role="group" aria-label="보기 방식"><button type="button" data-mode="read" aria-pressed="true">읽기</button><button type="button" data-mode="review" aria-pressed="false">검토</button></span>
+      <button class="themebtn" id="themebtn" type="button">테마</button></div>
+    <h1 id="title"></h1>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <div class="read" id="mode-read">
+    <nav class="toc" id="toc" aria-label="목차"></nav>
+    <article class="essay" id="essay"></article>
+  </div>
+
+  <div id="mode-review" hidden>
+  <div class="row gates" id="gates"></div>
+  <section class="stats" id="stats" aria-label="한눈에 보기"></section>
+
+  <div class="grid2">
+    <section class="panel"><h2>Review First</h2><div id="review"></div></section>
+    <section class="panel"><h2>요약 · 근거 Claim</h2><ul class="sum" id="summary"></ul></section>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="claims" aria-selected="true">Claims</button>
+    <button class="tab" role="tab" data-tab="struct">구조</button>
+    <button class="tab" role="tab" data-tab="source">원문</button>
+    <button class="tab" role="tab" data-tab="infer">추론</button>
+    <button class="tab" role="tab" data-tab="check">검증</button>
+  </nav>
+
+  <section class="pane on" id="pane-claims">
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="Claim 검색 (문장 · 원문 · ID)">
+      <select id="ftype"><option value="">유형: 전체</option></select>
+    </div>
+    <div class="chips" id="evchips"></div>
+    <div class="chips">
+      <button class="chip" data-quick="review">검토 필요만</button>
+      <button class="chip" data-quick="source-needed">source-needed만</button>
+      <button class="chip" data-quick="uncertain">uncertain만</button>
+      <button class="chip" data-quick="flagged">플래그 있음</button>
+      <button class="chip" data-quick="core">핵심만</button>
+      <button class="chip" data-quick="reset">전체</button>
+    </div>
+    <div class="filternote" id="filternote"></div>
+    <div class="countline" id="countline"></div>
+    <div id="cards"></div>
+  </section>
+
+  <section class="pane" id="pane-struct"><div id="visuals"></div></section>
+  <section class="pane" id="pane-source"><p class="sm">원문을 고쳐 쓰지 않은 그대로의 단위다. 하이라이트는 선택한 Claim의 <code>source_text</code>.</p><div id="units"></div></section>
+  <section class="pane" id="pane-infer"><div id="infer"></div></section>
+  <section class="pane" id="pane-check"><div id="check"></div></section>
+  </div>
+</div>
+<aside class="drawer" id="drawer" aria-label="근거" aria-hidden="true"><div class="dh"><b id="dtitle">근거</b><button class="x" type="button" id="dclose">닫기</button></div><div id="dbody"></div></aside>
+
+<script>
+const DATA = {"meta": {"title": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?", "mode": "inspect", "source_path": "source.md", "source_kind": "ai-answer", "created": "2026-10-03", "external_verification": false}, "counts": {"total": 20, "grounded": 0, "source_needed": 4, "inference": 0, "low_confidence": 0, "inference_in_source": 0, "inference_added": 0, "uncertain": 1, "conflicting": 2, "model_claim": 10, "opinion": 3, "by_evidence": {"verified": 0, "supported": 0, "source-needed": 4, "model-claim": 10, "inference": 0, "opinion": 3, "uncertain": 1, "conflicting": 2}, "by_type": {"fact": 7, "opinion": 5, "causal": 4, "conditional": 4, "quantitative": 2, "temporal": 1, "comparison": 1, "definition": 1, "relationship": 1, "prediction": 1, "uncertain": 1}, "fact": 7}, "units": [{"id": "P01", "kind": "heading", "text": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?", "line_start": 1, "line_end": 1, "section": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?"}, {"id": "P02", "kind": "quote", "text": "테스트 케이스 C — AI의 긴 답변. 실제 AI 답변에서 흔히 나타나는 품질 문제(근거 없는 단정, 일반화, 모호한 표현)가 그대로 들어 있는 예시 자료다.", "line_start": 3, "line_end": 3, "section": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?"}, {"id": "P03", "kind": "paragraph", "text": "좋은 질문입니다! 결론부터 말씀드리면, 대부분의 스타트업은 모놀리스로 시작하는 것이 정답입니다.", "line_start": 5, "line_end": 5, "section": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?"}, {"id": "P04", "kind": "paragraph", "text": "마이크로서비스는 서비스마다 독립적으로 배포할 수 있습니다. 그래서 팀이 커져도 배포 충돌이 줄어듭니다. 하지만 서비스 간 네트워크 호출이 생기기 때문에 장애 지점이 늘어나고 디버깅이 훨씬 어려워집니다.", "line_start": 7, "line_end": 7, "section": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?"}, {"id": "P05", "kind": "paragraph", "text": "업계 조사에 따르면 마이크로서비스를 도입한 기업의 70% 이상이 운영 복잡도 증가를 겪었습니다. 실제로 Amazon Prime Video 팀도 마이크로서비스에서 모놀리스로 돌아가 인프라 비용을 90% 줄였습니다.", "line_start": 9, "line_end": 9, "section": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?"}, {"id": "P06", "kind": "paragraph", "text": "일반적으로 개발자가 10명 미만이라면 모놀리스가 항상 더 생산적입니다. 팀이 50명을 넘으면 마이크로서비스를 검토할 시점입니다.", "line_start": 11, "line_end": 11, "section": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?"}, {"id": "P07", "kind": "paragraph", "text": "모놀리스로 시작하더라도 모듈 경계를 잘 나누면 나중에 서비스로 분리하기 쉽습니다. 이를 흔히 모듈러 모놀리스라고 부릅니다. 모듈러 모놀리스는 사실상 모든 상황에서 최적의 선택입니다.", "line_start": 13, "line_end": 13, "section": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?"}, {"id": "P08", "kind": "paragraph", "text": "쿠버네티스는 마이크로서비스 운영에 필수입니다. 쿠버네티스 없이 마이크로서비스를 운영하는 것은 현실적으로 불가능에 가깝습니다.", "line_start": 15, "line_end": 15, "section": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?"}, {"id": "P09", "kind": "paragraph", "text": "정리하면, 지금 단계에서는 모놀리스(또는 모듈러 모놀리스)로 빠르게 제품을 검증하고, 팀과 트래픽이 충분히 커졌을 때 병목이 되는 부분부터 분리하는 것을 추천드립니다. 아마 2~3년 안에는 분리가 필요 없을 가능성이 큽니다.", "line_start": 17, "line_end": 17, "section": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?"}, {"id": "P10", "kind": "paragraph", "text": "도움이 되셨길 바랍니다!", "line_start": 19, "line_end": 19, "section": "질문: 우리 스타트업은 마이크로서비스로 가야 하나요?"}], "claims": [{"id": "C01", "text": "대부분의 스타트업에게는 모놀리스로 시작하는 것이 정답이다.", "type": ["opinion"], "source_text": "대부분의 스타트업은 모놀리스로 시작하는 것이 정답입니다", "source_location": "P03", "evidence": "opinion", "confidence": "unknown", "visualization": "text", "importance": "core", "risk": "medium", "entities": ["E01"], "flags": ["overgeneralization", "unsupported"], "review_note": "답변의 결론. '대부분의'로 일반화하고 '정답'으로 단정하지만 근거(P05 수치·사례)는 문단 뒤에 출처 없이 나온다. 질문자의 팀 규모·트래픽을 묻지 않고 결론을 냈다.", "_score": 90, "_loc": "P03 (5행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C02", "text": "마이크로서비스는 서비스마다 독립적으로 배포할 수 있다.", "type": ["fact"], "source_text": "마이크로서비스는 서비스마다 독립적으로 배포할 수 있습니다", "source_location": "P04", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "supporting", "risk": "low", "entities": ["E02"], "_score": 35, "_loc": "P04 (7행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C03", "text": "마이크로서비스의 독립 배포는 팀이 커져도 배포 충돌을 줄인다.", "type": ["causal"], "source_text": "그래서 팀이 커져도 배포 충돌이 줄어듭니다", "source_location": "P04", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "supporting", "risk": "low", "entities": ["E02"], "dependencies": ["C02"], "flags": ["missing-condition"], "review_note": "'줄어듭니다'의 비교 대상(모놀리스 대비?)과 정도가 원문에 없다.", "_score": 65, "_loc": "P04 (7행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C04", "text": "마이크로서비스에서는 서비스 간 네트워크 호출이 생긴다.", "type": ["fact"], "source_text": "서비스 간 네트워크 호출이 생기기 때문에", "source_location": "P04", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "detail", "risk": "low", "entities": ["E02"], "flags": ["compound-split"], "review_note": "원문 한 문장(네트워크 호출 → 장애 지점 증가 + 디버깅 난이도 증가)을 C04·C05·C06으로 나눴다.", "_score": 35, "_loc": "P04 (7행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C05", "text": "서비스 간 네트워크 호출은 장애 지점을 늘린다.", "type": ["causal"], "source_text": "서비스 간 네트워크 호출이 생기기 때문에 장애 지점이 늘어나고", "source_location": "P04", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "supporting", "risk": "low", "entities": ["E02"], "dependencies": ["C04"], "flags": ["compound-split"], "review_note": "C04와 같은 원문 문장에서 분리한 인과 Claim.", "_score": 45, "_loc": "P04 (7행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C06", "text": "서비스 간 네트워크 호출은 디버깅을 훨씬 어렵게 만든다.", "type": ["causal"], "source_text": "서비스 간 네트워크 호출이 생기기 때문에 장애 지점이 늘어나고 디버깅이 훨씬 어려워집니다", "source_location": "P04", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "supporting", "risk": "low", "entities": ["E02"], "dependencies": ["C04"], "flags": ["vague", "compound-split"], "review_note": "'훨씬'의 측정 기준이 없다.", "_score": 65, "_loc": "P04 (7행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C07", "text": "마이크로서비스를 도입한 기업의 70% 이상이 운영 복잡도 증가를 겪었다고 원문은 '업계 조사'를 들어 말한다.", "type": ["quantitative", "fact"], "source_text": "업계 조사에 따르면 마이크로서비스를 도입한 기업의 70% 이상이 운영 복잡도 증가를 겪었습니다", "source_location": "P05", "evidence": "source-needed", "confidence": "unknown", "visualization": "text", "importance": "supporting", "risk": "medium", "entities": ["E02"], "numbers": ["70% 이상"], "flags": ["unsupported", "number-unclear", "vague", "outdated-risk"], "review_note": "'업계 조사'는 이름·발행처·연도·표본이 없어 확인할 수 있는 출처가 아니다. '운영 복잡도 증가'의 측정 기준도 없다.", "_score": 170, "_loc": "P05 (9행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C08", "text": "Amazon Prime Video 팀은 마이크로서비스에서 모놀리스로 돌아갔다.", "type": ["fact", "temporal"], "source_text": "실제로 Amazon Prime Video 팀도 마이크로서비스에서 모놀리스로 돌아가", "source_location": "P05", "evidence": "source-needed", "confidence": "unknown", "visualization": "text", "importance": "supporting", "risk": "medium", "entities": ["E05", "E02", "E01"], "flags": ["missing-condition", "overgeneralization"], "review_note": "어느 서비스·시스템 범위의 전환인지, 언제인지 원문에 없다. 한 팀의 사례를 '실제로'로 앞 문장(C07)의 일반 근거처럼 제시한다.", "_score": 120, "_loc": "P05 (9행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C09", "text": "Amazon Prime Video 팀은 인프라 비용을 90% 줄였다.", "type": ["quantitative", "fact"], "source_text": "Amazon Prime Video 팀도 마이크로서비스에서 모놀리스로 돌아가 인프라 비용을 90% 줄였습니다", "source_location": "P05", "evidence": "source-needed", "confidence": "unknown", "visualization": "text", "importance": "supporting", "risk": "medium", "entities": ["E05"], "numbers": ["90%"], "flags": ["number-unclear", "outdated-risk"], "review_note": "90%의 기준(어느 시스템의 어떤 비용, 어느 기간)이 없다. 출처 표기 없음.", "_score": 130, "_loc": "P05 (9행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C10", "text": "Amazon Prime Video 팀의 모놀리스 전환이 인프라 비용 90% 감소의 원인이다.", "type": ["causal"], "source_text": "모놀리스로 돌아가 인프라 비용을 90% 줄였습니다", "source_location": "P05", "evidence": "source-needed", "confidence": "unknown", "visualization": "text", "importance": "supporting", "risk": "medium", "entities": ["E05", "E01"], "dependencies": ["C08", "C09"], "flags": ["fact-inference-mix"], "review_note": "원문은 '돌아가 … 줄였습니다'로 전환과 비용 감소를 한 문장에 이어 인과처럼 제시하지만, 비용 감소가 전환 때문인지에 대한 근거는 없다.", "_score": 110, "_loc": "P05 (9행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C11", "text": "개발자가 10명 미만이면 모놀리스가 항상 더 생산적이다.", "type": ["conditional", "comparison"], "source_text": "일반적으로 개발자가 10명 미만이라면 모놀리스가 항상 더 생산적입니다", "source_location": "P06", "evidence": "model-claim", "confidence": "unknown", "visualization": "table", "importance": "core", "risk": "medium", "entities": ["E01"], "conditions": ["개발자가 10명 미만"], "flags": ["unsupported", "overgeneralization", "missing-condition", "number-unclear"], "review_note": "'일반적으로'와 '항상'이 한 문장에 함께 있다. '더 생산적'의 비교 대상(문맥상 마이크로서비스)과 생산성 기준, 10명이라는 경계값의 근거가 없다.", "_score": 135, "_loc": "P06 (11행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C12", "text": "팀이 50명을 넘으면 마이크로서비스를 검토할 시점이다.", "type": ["conditional", "opinion"], "source_text": "팀이 50명을 넘으면 마이크로서비스를 검토할 시점입니다", "source_location": "P06", "evidence": "opinion", "confidence": "unknown", "visualization": "table", "importance": "supporting", "risk": "medium", "entities": ["E02"], "conditions": ["팀이 50명 초과"], "flags": ["number-unclear", "naming-drift", "missing-condition"], "review_note": "50명의 근거가 없다. C11은 '개발자' 수, C12는 '팀' 인원으로 기준이 같은지 원문에서 확인되지 않는다. 10명 이상 50명 이하 구간에 대한 권고는 원문에 없다.", "_score": 100, "_loc": "P06 (11행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C13", "text": "모놀리스의 모듈 경계를 잘 나누면 나중에 서비스로 분리하기 쉽다.", "type": ["conditional"], "source_text": "모놀리스로 시작하더라도 모듈 경계를 잘 나누면 나중에 서비스로 분리하기 쉽습니다", "source_location": "P07", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "supporting", "risk": "low", "entities": ["E01"], "flags": ["vague"], "review_note": "'잘 나누면'의 기준이 없다.", "_score": 55, "_loc": "P07 (13행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C14", "text": "모듈 경계를 나눈 모놀리스를 흔히 모듈러 모놀리스라고 부른다.", "type": ["definition"], "source_text": "이를 흔히 모듈러 모놀리스라고 부릅니다", "source_location": "P07", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "detail", "risk": "low", "entities": ["E03", "E01"], "_score": 35, "_loc": "P07 (13행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C15", "text": "모듈러 모놀리스는 사실상 모든 상황에서 최적의 선택이다.", "type": ["opinion"], "source_text": "모듈러 모놀리스는 사실상 모든 상황에서 최적의 선택입니다", "source_location": "P07", "evidence": "conflicting", "confidence": "unknown", "visualization": "text", "importance": "core", "risk": "high", "entities": ["E03"], "conflicts_with": ["C19"], "flags": ["overgeneralization", "unsupported", "vague"], "review_note": "'모든 상황에서 최적'은 같은 답변의 C19(팀·트래픽이 커지면 병목 부분부터 서비스로 분리 권고)와 양립하지 않는다. '최적'의 기준도 없다.", "_score": 200, "_loc": "P07 (13행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C16", "text": "쿠버네티스는 마이크로서비스 운영에 필수다.", "type": ["fact", "relationship"], "source_text": "쿠버네티스는 마이크로서비스 운영에 필수입니다", "source_location": "P08", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "supporting", "risk": "medium", "entities": ["E04", "E02"], "flags": ["unsupported", "overgeneralization"], "review_note": "근거 없는 절대 단정. 바로 다음 문장(C17)은 '불가능에 가깝다'로 스스로 강도를 낮춘다.", "_score": 85, "_loc": "P08 (15행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C17", "text": "쿠버네티스 없이 마이크로서비스를 운영하는 것은 현실적으로 불가능에 가깝다.", "type": ["fact"], "source_text": "쿠버네티스 없이 마이크로서비스를 운영하는 것은 현실적으로 불가능에 가깝습니다", "source_location": "P08", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "detail", "risk": "medium", "entities": ["E04", "E02"], "flags": ["unsupported", "overgeneralization"], "review_note": "C16과 같은 주장을 약하게 반복한다('필수' vs '불가능에 가깝다'). 대안 운영 방식은 언급하지 않는다.", "_score": 85, "_loc": "P08 (15행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C18", "text": "현 단계에서는 모놀리스(또는 모듈러 모놀리스)로 빠르게 제품을 검증하는 것을 추천한다.", "type": ["opinion"], "source_text": "지금 단계에서는 모놀리스(또는 모듈러 모놀리스)로 빠르게 제품을 검증하고", "source_location": "P09", "evidence": "opinion", "confidence": "unknown", "visualization": "text", "importance": "core", "risk": "medium", "entities": ["E01", "E03"], "flags": ["compound-split"], "review_note": "원문 한 문장의 두 권고를 C18·C19로 나눴다. '지금 단계'가 질문자의 어떤 상황인지 원문에 없다.", "_score": 50, "_loc": "P09 (17행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C19", "text": "팀과 트래픽이 충분히 커졌을 때 병목이 되는 부분부터 분리하는 것을 추천한다.", "type": ["conditional", "opinion"], "source_text": "팀과 트래픽이 충분히 커졌을 때 병목이 되는 부분부터 분리하는 것을 추천드립니다", "source_location": "P09", "evidence": "conflicting", "confidence": "unknown", "visualization": "table", "importance": "core", "risk": "medium", "conflicts_with": ["C15"], "conditions": ["팀과 트래픽이 충분히 커졌을 때"], "flags": ["vague", "compound-split"], "review_note": "C15('모든 상황에서 최적')와 양립하지 않는다. '충분히 커졌을 때'가 C12의 50명 기준과 같은지 원문에 없다.", "_score": 140, "_loc": "P09 (17행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}, {"id": "C20", "text": "질문자의 스타트업은 아마 2~3년 안에는 분리가 필요 없을 가능성이 크다.", "type": ["prediction", "uncertain"], "source_text": "아마 2~3년 안에는 분리가 필요 없을 가능성이 큽니다", "source_location": "P09", "evidence": "uncertain", "confidence": "unknown", "visualization": "text", "importance": "supporting", "risk": "medium", "numbers": ["2~3년"], "flags": ["unsupported", "number-unclear"], "review_note": "질문자의 팀 규모·성장률·트래픽 정보가 원문에 없는데 기간을 예측한다. 주어(질문자의 스타트업)는 질문 제목 '우리 스타트업'에서 가져왔다.", "_score": 115, "_loc": "P09 (17행, §질문: 우리 스타트업은 마이크로서비스로 가야 하나요?)"}], "entities": [{"id": "E01", "name": "모놀리스", "claims": ["C01", "C08", "C10", "C11", "C13", "C14", "C18"]}, {"id": "E02", "name": "마이크로서비스", "claims": ["C02", "C03", "C04", "C05", "C06", "C07", "C08", "C12", "C16", "C17"]}, {"id": "E03", "name": "모듈러 모놀리스", "claims": ["C14", "C15", "C18"]}, {"id": "E04", "name": "쿠버네티스", "claims": ["C16", "C17"]}, {"id": "E05", "name": "Amazon Prime Video 팀", "claims": ["C08", "C09", "C10"]}], "inferences": [], "visuals": [{"id": "V01", "kind": "table", "title": "팀 규모·성장 조건별 권고 (원문 기준값과 근거)", "columns": ["조건(원문)", "원문 권고", "기준값 근거"], "rows": [{"cells": ["개발자 10명 미만", "모놀리스가 항상 더 생산적", "— (원문에 없음)"], "claims": ["C11"]}, {"cells": ["팀 50명 초과", "마이크로서비스를 검토할 시점", "— (원문에 없음)"], "claims": ["C12"]}, {"cells": ["팀과 트래픽이 충분히 커졌을 때", "병목 부분부터 분리", "— (원문에 없음)"], "claims": ["C19"]}], "_mermaid": null, "_svg": null}], "summary": [{"id": "S01", "text": "답변의 결론은 대부분의 스타트업에게 모놀리스로 시작하는 것이 정답이라는 권고다.", "claims": ["C01", "C18"], "_weakest": "opinion", "_low": false}, {"id": "S02", "text": "결론을 받치는 '70% 이상' 통계와 Amazon Prime Video의 비용 90% 감소 사례에는 확인 가능한 출처가 없다.", "claims": ["C07", "C09"], "_weakest": "source-needed", "_low": false}, {"id": "S03", "text": "모듈러 모놀리스가 사실상 모든 상황에서 최적이라는 주장은 팀과 트래픽이 커지면 분리하라는 권고와 양립하지 않는 것으로 보인다.", "claims": ["C15", "C19"], "_weakest": "conflicting", "_low": false}, {"id": "S04", "text": "팀 규모 기준(개발자 10명 미만, 팀 50명 초과)에는 근거가 제시되지 않았다.", "claims": ["C11", "C12"], "_weakest": "model-claim", "_low": false}, {"id": "S05", "text": "답변은 아마 2~3년 안에는 분리가 필요 없을 가능성이 크다고 예측하지만, 질문자의 팀·트래픽 정보는 원문에 없다.", "claims": ["C20"], "_weakest": "uncertain", "_low": false}, {"id": "S06", "text": "쿠버네티스가 마이크로서비스 운영에 필수라는 주장은 근거 없이 단정되었다.", "claims": ["C16", "C17"], "_weakest": "model-claim", "_low": false}], "review": [{"id": "C15", "reason": "충돌 · 지나친 일반화 · 근거 없는 강한 단정 · 모호한 표현 · 위험 높음 · 충돌: C19"}, {"id": "C07", "reason": "출처 확인 필요 · 근거 없는 강한 단정 · 숫자 기준 불명확 · 모호한 표현 · 시점 민감"}, {"id": "C19", "reason": "충돌 · 모호한 표현 · 충돌: C15"}, {"id": "C11", "reason": "작성자 단언 · 근거 없는 강한 단정 · 지나친 일반화 · 조건 누락 · 숫자 기준 불명확"}, {"id": "C09", "reason": "출처 확인 필요 · 숫자 기준 불명확 · 시점 민감"}, {"id": "C08", "reason": "출처 확인 필요 · 조건 누락 · 지나친 일반화"}, {"id": "C20", "reason": "불확실 · 근거 없는 강한 단정 · 숫자 기준 불명확"}, {"id": "C10", "reason": "출처 확인 필요 · 근거 없는 인과 · 사실·추론 혼합"}, {"id": "C12", "reason": "의견·평가 · 숫자 기준 불명확 · 이름 불일치 · 조건 누락"}, {"id": "C01", "reason": "의견·평가 · 지나친 일반화 · 근거 없는 강한 단정"}, {"id": "C16", "reason": "작성자 단언 · 근거 없는 강한 단정 · 지나친 일반화"}, {"id": "C17", "reason": "작성자 단언 · 근거 없는 강한 단정 · 지나친 일반화"}], "narrative": {"headline": {"text": "이 AI 답변은 대부분의 스타트업에게 모놀리스로 시작하는 것이 정답이라고 말하고, 지금 단계에서는 모놀리스(또는 모듈러 모놀리스)로 빠르게 제품을 검증하라고 추천한다.", "claims": ["C01", "C18"], "_weakest": "opinion", "_low": false}, "sections": [{"id": "N01", "title": "질문과 답변의 결론", "blocks": [{"kind": "text", "sentences": [{"text": "질문은 스타트업이 마이크로서비스 구조로 가야 하는지를 묻는다. 두 구조의 뜻은 다음과 같다.", "context": ["K01", "K02"], "_weakest": null, "_low": false}, {"text": "모놀리스는 기능 전체를 한 덩어리로 만들어 배포하고, 마이크로서비스는 작은 서비스로 나누어 따로 배포한다.", "context": ["K01", "K02"], "_weakest": null, "_low": false}, {"text": "답변은 결론부터 내놓는다 — 대부분의 스타트업에게는 모놀리스로 시작하는 것이 정답이라는 것이다.", "claims": ["C01"], "_weakest": "opinion", "_low": false}, {"text": "답변의 마지막 정리도 같다. 지금 단계에서는 모놀리스(또는 모듈러 모놀리스)로 빠르게 제품을 검증하라고 추천한다.", "claims": ["C18"], "_weakest": "opinion", "_low": false}, {"text": "답변은 질문자의 스타트업이 아마 2~3년 안에는 서비스 분리가 필요 없을 가능성이 크다고 내다본다.", "claims": ["C20"], "_weakest": "uncertain", "_low": false}]}]}, {"id": "N02", "title": "답변이 보는 마이크로서비스의 장점과 대가", "blocks": [{"kind": "text", "sentences": [{"text": "답변에 따르면 마이크로서비스는 서비스마다 독립적으로 배포할 수 있다.", "claims": ["C02"], "_weakest": "model-claim", "_low": false}, {"text": "답변은 이 독립 배포 덕분에 팀이 커져도 배포 충돌이 줄어든다고 설명한다.", "claims": ["C03"], "_weakest": "model-claim", "_low": false}, {"text": "다만 답변은 마이크로서비스에서는 서비스 간 네트워크 호출이 생긴다는 점도 짚는다.", "claims": ["C04"], "_weakest": "model-claim", "_low": false}, {"text": "답변에 따르면 이 네트워크 호출 때문에 장애 지점이 늘어나고 디버깅이 훨씬 어려워진다.", "claims": ["C05", "C06"], "_weakest": "model-claim", "_low": false}]}]}, {"id": "N03", "title": "답변이 드는 근거: 조사 수치와 Amazon 사례", "blocks": [{"kind": "points", "sentences": [{"text": "답변은 '업계 조사'를 들어 마이크로서비스를 도입한 기업의 70% 이상이 운영 복잡도 증가를 겪었다고 말한다.", "claims": ["C07"], "_weakest": "source-needed", "_low": false}, {"text": "또 Amazon Prime Video 팀이 마이크로서비스에서 모놀리스로 돌아갔다는 사례를 든다.", "claims": ["C08"], "_weakest": "source-needed", "_low": false}, {"text": "답변에 따르면 Amazon Prime Video 팀은 이 전환으로 인프라 비용을 90% 줄였다.", "claims": ["C09", "C10"], "_weakest": "source-needed", "_low": false}]}]}, {"id": "N04", "title": "팀 규모에 따라 무엇을 하라고 하는가", "blocks": [{"kind": "text", "sentences": [{"text": "답변은 일반적으로 개발자가 10명 미만이라면 모놀리스가 항상 더 생산적이라고 말한다.", "claims": ["C11"], "_weakest": "model-claim", "_low": false}, {"text": "팀이 50명을 넘으면 마이크로서비스를 검토할 시점이라고 본다.", "claims": ["C12"], "_weakest": "opinion", "_low": false}, {"text": "그리고 팀과 트래픽이 충분히 커졌을 때 병목이 되는 부분부터 분리하라고 추천한다.", "claims": ["C19"], "note": "원문은 이 문장을 유보 없이 단정한다. 강도를 낮추지 않고 귀속만 했다. 충돌 여부는 REVIEW FIRST가 표시한다.", "_weakest": "conflicting", "_low": false}]}, {"kind": "visual", "ref": "V01", "caption": "답변이 제시한 팀 규모·성장 조건별 권고"}]}, {"id": "N05", "title": "중간 길: 모듈러 모놀리스", "blocks": [{"kind": "text", "sentences": [{"text": "답변에 따르면 모놀리스로 시작하더라도 모듈 경계를 잘 나누면 나중에 서비스로 분리하기 쉽다.", "claims": ["C13"], "_weakest": "model-claim", "_low": false}, {"text": "답변은 이렇게 모듈 경계를 나눈 모놀리스를 흔히 모듈러 모놀리스라고 부른다고 소개한다.", "claims": ["C14"], "_weakest": "model-claim", "_low": false}, {"text": "답변은 모듈러 모놀리스가 사실상 모든 상황에서 최적의 선택이라고 말한다.", "claims": ["C15"], "note": "원문은 이 문장을 유보 없이 단정한다. 강도를 낮추지 않고 귀속만 했다. 충돌 여부는 REVIEW FIRST가 표시한다.", "_weakest": "conflicting", "_low": false}]}]}, {"id": "N06", "title": "마이크로서비스를 운영하려면: 쿠버네티스", "blocks": [{"kind": "text", "sentences": [{"text": "쿠버네티스는 컨테이너로 포장한 애플리케이션의 배포·확장·관리를 자동화하는 플랫폼이다.", "context": ["K03"], "_weakest": null, "_low": false}, {"text": "답변은 쿠버네티스가 마이크로서비스 운영에 필수라고 말한다.", "claims": ["C16"], "_weakest": "model-claim", "_low": false}, {"text": "답변은 쿠버네티스 없이 마이크로서비스를 운영하는 것은 현실적으로 불가능에 가깝다고 덧붙인다.", "claims": ["C17"], "_weakest": "model-claim", "_low": false}]}]}]}, "context": [{"id": "K01", "term": "모놀리스", "text": "모놀리스(monolith)는 애플리케이션의 기능 전체를 하나의 코드베이스로 만들고 한 덩어리로 배포하는 구조를 말한다.", "reason": "원문은 질문의 핵심 용어인 모놀리스를 설명 없이 쓴다."}, {"id": "K02", "term": "마이크로서비스", "text": "마이크로서비스(microservices)는 애플리케이션을 작은 서비스 여러 개로 나누고, 각 서비스를 따로 배포하며 서비스끼리 네트워크로 통신하게 하는 구조를 말한다.", "reason": "원문은 마이크로서비스의 장단점만 말하고 무엇인지는 설명하지 않는다."}, {"id": "K03", "term": "쿠버네티스", "text": "쿠버네티스(Kubernetes)는 컨테이너로 포장한 애플리케이션의 배포·확장·관리를 자동화하는 오픈소스 플랫폼이다.", "reason": "원문은 쿠버네티스를 무엇인지 밝히지 않고 '필수'라고만 말한다."}], "skipped": [{"unit": "P02", "reason": "테스트 케이스 설명 메타 주석 — 검토 대상 AI 답변 본문이 아니다"}, {"unit": "P10", "reason": "맺음 인사말 — 주장 없음"}], "validation": {"scope": "구조·참조 검사 통과. 의미 정확성・주장 누락・외부 사실의 참 여부를 보장하지 않음.", "semantic": {"source_to_claim": "not-reviewed", "claim_to_narrative": "not-reviewed", "coverage": "not-reviewed", "reader_flow": "not-reviewed"}, "review_origin": "작성자가 기록한 검토 상태이며 자동 의미 검증 결과가 아님", "external": {"status": "not-performed", "note": "외부 확인 기록의 형식만 검사하며 실제 조회 수행·출처의 진위는 보장하지 않음"}}, "explanation_plan": null, "gates": {"G1": "PASS", "G2": "PASS", "G3": "PASS", "G4": "PASS", "G5": "PASS", "G6": "PASS"}, "warnings": [{"level": "warning", "gate": "G1", "where": "explanation_plan", "msg": "독자 중심 설명 기획이 없다. 기존 IR 호환을 위해 경고로 표시한다"}], "labels": {"evidence": {"verified": "외부 확인됨", "supported": "출처·데이터 제시됨", "source-needed": "출처 확인 필요", "model-claim": "작성자 단언", "inference": "원문 속 추론", "opinion": "의견·평가", "uncertain": "불확실", "conflicting": "충돌"}, "flags": {"unsupported": "근거 없는 강한 단정", "overgeneralization": "지나친 일반화", "vague": "모호한 표현", "fact-inference-mix": "사실·추론 혼합", "naming-drift": "이름 불일치", "missing-condition": "조건 누락", "number-unclear": "숫자 기준 불명확", "hedge-dropped-in-source": "원문 안에서 유보→단정", "compound-split": "복합 문장 분해", "outdated-risk": "시점 민감", "overclaim": "근거보다 강한 결론"}}};
+</script>
+<script>
+(function(){
+  "use strict";
+  const $ = (s, el=document) => el.querySelector(s);
+  const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const EVL = DATA.labels.evidence, FLL = DATA.labels.flags;
+  const C = Object.fromEntries(DATA.claims.map(c => [c.id, c]));
+  const INF = Object.fromEntries(DATA.inferences.map(i => [i.id, i]));
+  const visualsOf = {};
+  DATA.visuals.forEach(v => {
+    const add = ids => (ids||[]).forEach(id => (visualsOf[id] = visualsOf[id] || new Set()).add(v.id));
+    (v.nodes||[]).forEach(n => add(n.claims));
+    (v.edges||[]).forEach(e => add(e.claims));
+    (v.steps||[]).forEach(s => add(s.claims));
+    (v.rows||[]).forEach(r => add(r.claims));
+    (v.scenes||[]).forEach(s => add(s.claims));
+  });
+
+  // ---------- theme
+  try { const t = localStorage.getItem("uc-theme"); if (t) document.documentElement.dataset.theme = t; } catch(e){}
+  $("#themebtn").onclick = () => {
+    const cur = document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const next = cur === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("uc-theme", next); } catch(e){}
+  };
+
+  // ---------- header
+  const m = DATA.meta;
+  $("#title").textContent = m.title;
+  $("#meta").textContent = `원문 ${m.source_path} · 모드 ${m.mode} · ${m.created || ""} · 외부 검증 ${m.external_verification ? "기록 있음 (실제 수행은 자동 검증 안 함)" : "수행하지 않음 (confidence 기본값 unknown)"}`;
+  const gateName = {G1:"Claim ID",G2:"시각요소↔Claim",G3:"인용·숫자·관계 유형 검사",G4:"Fact/Inference",G5:"불확실성",G6:"원문 복귀"};
+  $("#gates").innerHTML = Object.entries(DATA.gates).map(([g,v]) => `<span class="gate ${v}" title="${esc(gateName[g])}">${g} ${v}</span>`).join("");
+
+  const notice = document.createElement("p");
+  notice.className = "sm";
+  notice.textContent = DATA.validation.scope + " 검토 상태: " + Object.entries(DATA.validation.semantic).map(([stage,status]) => stage + "=" + status).join(" · ") + "。" + DATA.validation.review_origin + "。" + DATA.validation.external.note;
+  $("#gates").after(notice);
+  if (DATA.explanation_plan) {
+    const plan = document.createElement("p");
+    plan.className = "sm";
+    plan.textContent = "독자: " + DATA.explanation_plan.audience + " · 목적: " + DATA.explanation_plan.goal + " · 시작 질문: " + DATA.explanation_plan.opening_question;
+    notice.after(plan);
+  }
+  const k = DATA.counts;
+  const stats = [
+    ["총 Claim", k.total, "", null],
+    ["근거 제시됨", k.grounded, "ok", ["verified","supported"]],
+    ["출처 확인 필요", k.source_needed, "bad", ["source-needed"]],
+    ["작성자 단언", k.model_claim, "", ["model-claim"]],
+    ["Inference", k.inference, "warn", ["inference"]],
+    ["불확실", k.uncertain, "warn", ["uncertain"]],
+    ["충돌 가능성", k.conflicting, "bad", ["conflicting"]],
+  ];
+  $("#stats").innerHTML = stats.map((s,i) => `<button class="stat ${s[2]}" data-i="${i}" type="button"><div class="n">${s[1]}</div><div class="l">${esc(s[0])}</div></button>`).join("");
+  $$("#stats .stat").forEach(b => b.onclick = () => { const s = stats[+b.dataset.i]; setState({ev: s[3] ? new Set(s[3]) : new Set(), quick:null, ids:null}); showTab("claims"); });
+
+  $("#review").innerHTML = DATA.review.length ? DATA.review.map(r => `
+    <div class="review-item" data-id="${r.id}"><span class="rid">${r.id}</span><span class="rr">${esc(r.reason)}</span><span class="rt">${esc(C[r.id].text)}</span></div>`).join("")
+    : `<p class="sm">우선 검토 기준(점수 50)을 넘는 Claim이 없다.</p>`;
+  $$("#review .review-item").forEach(el => el.onclick = () => openClaim(el.dataset.id));
+
+  $("#summary").innerHTML = DATA.summary.length ? DATA.summary.map(s => `
+    <li>${esc(s.text)} ${s.claims.map(cref).join(" ")} <span class="badge ${s._weakest}">${esc(EVL[s._weakest]||"")}${s._low ? " · 근거 약함" : ""}</span></li>`).join("")
+    : `<li class="sm">요약 없음</li>`;
+
+  function cref(id){ return `<span class="cref" data-cref="${esc(id)}" style="font:600 12px var(--mono);color:var(--accent);cursor:pointer">${esc(id)}</span>`; }
+  document.addEventListener("click", e => {
+    const t = e.target.closest("[data-cref]"); if (!t) return;
+    if (t.closest("#mode-read") || t.closest("#drawer")) openDrawer([t.dataset.cref], [], "근거");
+    else openClaim(t.dataset.cref);
+  });
+
+  // ---------- tabs
+  function showTab(name){
+    $$(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.tab === name ? "true" : "false"));
+    $$(".pane").forEach(p => p.classList.toggle("on", p.id === "pane-" + name));
+    if (name === "struct") setTimeout(renderDiagrams, 0);
+  }
+  $$(".tab").forEach(t => t.onclick = () => showTab(t.dataset.tab));
+
+  // ---------- claims filter
+  const types = Object.keys(k.by_type);
+  $("#ftype").innerHTML += types.map(t => `<option value="${t}">${t} (${k.by_type[t]})</option>`).join("");
+  const evs = Object.keys(EVL).filter(e => k.by_evidence[e]);
+  $("#evchips").innerHTML = evs.map(e => `<button class="chip" data-ev="${e}" aria-pressed="false">${esc(EVL[e])} · ${k.by_evidence[e]}</button>`).join("");
+
+  const state = {q:"", type:"", ev:new Set(), quick:null, ids:null, idsLabel:""};
+  function setState(p){ Object.assign(state, p); syncControls(); renderCards(); }
+  function syncControls(){
+    $("#q").value = state.q; $("#ftype").value = state.type;
+    $$("#evchips .chip").forEach(c => c.setAttribute("aria-pressed", state.ev.has(c.dataset.ev) ? "true" : "false"));
+    $$("[data-quick]").forEach(c => c.setAttribute("aria-pressed", state.quick === c.dataset.quick ? "true" : "false"));
+    const fn = $("#filternote");
+    if (state.ids){ fn.style.display = "block"; fn.innerHTML = `${esc(state.idsLabel)} — Claim ${state.ids.size}개만 표시 <button type="button" id="clearids">× 해제</button>`; $("#clearids").onclick = () => setState({ids:null}); }
+    else fn.style.display = "none";
+  }
+  $("#q").oninput = e => setState({q:e.target.value});
+  $("#ftype").onchange = e => setState({type:e.target.value});
+  $$("#evchips .chip").forEach(c => c.onclick = () => { const s = new Set(state.ev); s.has(c.dataset.ev) ? s.delete(c.dataset.ev) : s.add(c.dataset.ev); setState({ev:s}); });
+  $$("[data-quick]").forEach(c => c.onclick = () => {
+    const q = c.dataset.quick;
+    if (q === "reset") return setState({q:"", type:"", ev:new Set(), quick:null, ids:null});
+    if (q === "source-needed" || q === "uncertain") return setState({ev:new Set([q]), quick:q});
+    setState({quick: state.quick === q ? null : q});
+  });
+
+  function match(c){
+    if (state.ids && !state.ids.has(c.id)) return false;
+    if (state.type && !(c.type||[]).includes(state.type)) return false;
+    if (state.ev.size && !state.ev.has(c.evidence)) return false;
+    if (state.quick === "review" && c._score < 50) return false;
+    if (state.quick === "flagged" && !(c.flags||[]).some(f => f !== "compound-split")) return false;
+    if (state.quick === "core" && c.importance !== "core") return false;
+    if (state.q){
+      const q = state.q.toLowerCase();
+      if (![c.id, c.text, c.source_text, c.review_note, (c.type||[]).join(" ")].join(" ").toLowerCase().includes(q)) return false;
+    }
+    return true;
+  }
+
+  function cardHTML(c){
+    const flags = (c.flags||[]).map(f => `<span class="badge">${esc(FLL[f]||f)}</span>`).join(" ");
+    const kv = [];
+    if (c.conditions && c.conditions.length) kv.push(`<b>조건</b> ${esc(c.conditions.join("; "))}`);
+    if (c.exceptions && c.exceptions.length) kv.push(`<b>예외</b> ${esc(c.exceptions.join("; "))}`);
+    if (c.dependencies && c.dependencies.length) kv.push(`<b>전제</b> ${c.dependencies.map(cref).join(" ")}`);
+    if (c.conflicts_with && c.conflicts_with.length) kv.push(`<b>충돌</b> ${c.conflicts_with.map(cref).join(" ")}`);
+    if (c.evidence_ref) kv.push(`<b>원문 속 근거</b> ${esc(c.evidence_ref)}`);
+    if (c.verification) kv.push(`<b>외부 확인</b> ${esc(c.verification.method)} · ${esc(c.verification.result)} · ${esc(c.verification.reference)}`);
+    kv.push(`<b>confidence</b> ${esc(c.confidence)} · <b>importance</b> ${esc(c.importance||"—")} · <b>risk</b> ${esc(c.risk||"—")} · <b>표현</b> ${esc(c.visualization)}`);
+    const inVis = visualsOf[c.id] ? [...visualsOf[c.id]] : [];
+    return `<article class="card ev-${c.evidence}" id="card-${c.id}">
+      <div class="top"><span class="cid">${c.id}</span><span class="badge ${c.evidence}">${esc(EVL[c.evidence])}</span><span class="type">${esc((c.type||[]).join(" · "))}</span>${flags}</div>
+      <div class="txt">${esc(c.text)}</div>
+      <div class="loc">${esc(c._loc)}</div>
+      <div class="more">
+        <div class="cmp"><div><div class="h">원문 구간</div>${esc(c.source_text)}</div><div><div class="h">재작성 (STE)</div>${esc(c.text)}</div></div>
+        ${c.review_note ? `<div class="note">⚑ ${esc(c.review_note)}</div>` : ""}
+        <div class="kv">${kv.join("<br>")}</div>
+        <button class="btn" data-goto-src="${c.id}" type="button">원문에서 보기</button>
+        ${inVis.length ? `<button class="btn" data-goto-vis="${c.id}" type="button">그림에서 보기 (${inVis.join(", ")})</button>` : ""}
+      </div></article>`;
+  }
+  function renderCards(){
+    const list = DATA.claims.filter(match);
+    $("#countline").textContent = `${list.length} / ${DATA.claims.length} Claim`;
+    $("#cards").innerHTML = list.map(cardHTML).join("") || `<p class="sm">조건에 맞는 Claim이 없다.</p>`;
+  }
+  $("#cards").addEventListener("click", e => {
+    const s = e.target.closest("[data-goto-src]"); if (s) return gotoSource(s.dataset.gotoSrc);
+    const v = e.target.closest("[data-goto-vis]"); if (v) return gotoVisual(v.dataset.gotoVis);
+    const top = e.target.closest(".top, .txt"); if (top) top.closest(".card").classList.toggle("open");
+  });
+
+  function openClaim(id){
+    setMode("review"); showTab("claims");
+    if (!DATA.claims.filter(match).some(c => c.id === id)) setState({q:"", type:"", ev:new Set(), quick:null, ids:null});
+    const el = $("#card-" + id); if (!el) return;
+    el.classList.add("open", "flash"); el.scrollIntoView({behavior:"smooth", block:"center"});
+    setTimeout(() => el.classList.remove("flash"), 1600);
+  }
+
+  // ---------- source
+  const byUnit = {};
+  DATA.claims.forEach(c => (byUnit[c.source_location] = byUnit[c.source_location] || []).push(c.id));
+  const skipped = Object.fromEntries(DATA.skipped.map(s => [s.unit, s.reason]));
+  function renderUnits(focusId, highlight){
+    $("#units").innerHTML = DATA.units.map(u => {
+      let t = esc(u.text);
+      if (u.id === focusId && highlight){
+        const h = esc(highlight).trim();
+        const idx = t.indexOf(h);
+        if (idx >= 0) t = t.slice(0, idx) + "<mark>" + h + "</mark>" + t.slice(idx + h.length);
+      }
+      const ids = byUnit[u.id] || [];
+      const sk = skipped[u.id];
+      return `<div class="unit ${u.kind} ${u.id===focusId?"focus":""} ${sk?"skipped":""}" id="unit-${u.id}">
+        <div class="uid">${u.id}<br><span style="font-weight:400">${u.line_start}${u.line_end!==u.line_start?"–"+u.line_end:""}행</span></div>
+        <div><div class="ut">${t}</div>
+        ${ids.length ? `<div class="uc">${ids.map(cref).join(" ")}</div>` : ""}
+        ${sk ? `<div class="sm">skip: ${esc(sk)}</div>` : ""}</div></div>`;
+    }).join("");
+  }
+  function gotoSource(id){
+    const c = C[id]; setMode("review"); showTab("source"); renderUnits(c.source_location, c.source_text);
+    const el = $("#unit-" + c.source_location); if (el) el.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+  renderUnits();
+
+  // ---------- visuals
+  function claimRefs(ids){ return (ids||[]).map(cref).join(" "); }
+  function weakestOf(ids){
+    const order = ["conflicting","source-needed","uncertain","inference","model-claim","opinion","supported","verified"];
+    const evs = (ids||[]).map(i => C[i] && C[i].evidence);
+    return order.find(o => evs.includes(o)) || "";
+  }
+  function edgeTable(v){
+    const nodes = Object.fromEntries((v.nodes||[]).map(n => [n.id, n]));
+    return `<div class="tablewrap"><table><thead><tr><th>출발</th><th>종류</th><th>라벨</th><th>도착</th><th>근거</th></tr></thead><tbody>
+        ${(v.edges||[]).map(e => `<tr><td>${esc((nodes[e.from]||{}).label||e.from)}</td><td><code>${esc(e.kind)}</code></td><td>${esc(e.label||"")}</td><td>${esc((nodes[e.to]||{}).label||e.to)}</td>
+          <td>${e.inferred ? (() => { const tag = (INF[e.inference]||{}).label || "INFERENCE"; return `<span class="badge ${tag}">${tag} ${esc(e.inference)}</span>`; })() : claimRefs(e.claims)}</td></tr>`).join("")}
+        </tbody></table></div>`;
+  }
+  function visualBody(v, pfx){
+    let body = "";
+    if (v.kind === "diagram"){
+      body = `<div class="diagram" id="${pfx}-${v.id}" data-vid="${v.id}">${v._svg || `<pre>${esc(v._mermaid)}</pre>`}</div>`;
+      if (pfx === "dg") body += `<p class="legend">노드를 누르면 그 노드의 근거 Claim만 걸러진다. 굵은 화살표(==&gt;)=원문 인과 · 점선=INFERENCE/INTERPRETATION(원문에 없음) · 노드 색=근거 중 가장 약한 상태. 원형 배치는 순서·위계를 뜻하지 않는다. 전체 라벨은 연결 근거 표에서 확인한다.</p>` + edgeTable(v);
+      return body;
+    }
+    if (v.kind === "flow"){
+      body = `<ol class="flow">${(v.steps||[]).map(s => `<li>${esc(s.text)} ${claimRefs(s.claims)}</li>`).join("")}</ol>`;
+    } else if (v.kind === "table"){
+      body = `<div class="tablewrap"><table><thead><tr>${(v.columns||[]).map(c => `<th>${esc(c)}</th>`).join("")}<th>Claim</th><th>근거 상태</th></tr></thead><tbody>
+        ${(v.rows||[]).map(r => { const w = weakestOf(r.claims); return `<tr>${(r.cells||[]).map(x => `<td>${esc(x)}</td>`).join("")}<td>${claimRefs(r.claims)}</td><td><span class="badge ${w}">${esc(EVL[w]||"")}</span></td></tr>`; }).join("")}
+        </tbody></table></div>`;
+    } else if (v.kind === "animation"){
+      body = `<p class="sm">애니메이션 후보 — 스토리보드만 만든다. 자막 = 내레이션, 장면 20~60초.</p><div class="tablewrap"><table><thead><tr><th>#</th><th>자막</th><th>움직임</th><th>초</th><th>Claim</th></tr></thead><tbody>
+        ${(v.scenes||[]).map((s,i) => `<tr><td>${i+1}</td><td>${esc(s.caption)}</td><td>${esc(s.motion)}</td><td>${esc(s.seconds||"")}</td><td>${claimRefs(s.claims)}</td></tr>`).join("")}
+        </tbody></table></div>`;
+    }
+    return body;
+  }
+  $("#visuals").innerHTML = DATA.visuals.length ? DATA.visuals.map(v => {
+    let body = visualBody(v, "dg");
+    return `<section class="vis" id="vis-${v.id}"><h3>${v.id} · ${esc(v.title)} <span class="type">${v.kind}</span></h3>${body}</section>`;
+  }).join("") : `<p class="sm">관계 구조로 그릴 만한 Claim이 없다 — 텍스트가 더 정확하다.</p>`;
+
+  // 빌드 시 생성한 SVG만 사용한다. 외부 스크립트나 API를 요청하지 않는다.
+  function renderDiagrams(){
+    const boxes = $$(".diagram[data-vid]").filter(b => !b.dataset.done && b.offsetParent !== null);
+    boxes.forEach(box => {
+      box.dataset.done = "1";
+      wireNodes(box, DATA.visuals.find(x => x.id === box.dataset.vid));
+    });
+  }
+  function nodeIdOf(g){ if (g.dataset.nodeId) return g.dataset.nodeId; const mm = (g.id||"").match(/flowchart-n_([A-Za-z0-9_]+)-\d+$/); return mm ? mm[1] : null; }
+  function wireNodes(box, v){
+    const nodes = Object.fromEntries((v.nodes||[]).map(n => [n.id, n]));
+    $$("g.node", box).forEach(g => {
+      const nd = nodes[nodeIdOf(g)]; if (!nd) return;
+      g.dataset.claims = nd.claims.join(" ");
+      g.addEventListener("click", () => {
+        if (box.closest("#mode-read")) return openDrawer(nd.claims, [], `그림 노드 "${nd.label}"의 근거`);
+        setState({ids:new Set(nd.claims), idsLabel:`노드 "${nd.label}"`, q:"", type:"", ev:new Set(), quick:null}); showTab("claims");
+      });
+    });
+  }
+  function gotoVisual(id){
+    showTab("struct");
+    const vid = [...visualsOf[id]][0];
+    const go = () => {
+      $$(".diagram g.node").forEach(g => g.classList.toggle("hl", (g.dataset.claims||"").split(" ").includes(id)));
+      const el = $("#vis-" + vid); if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
+    };
+    renderDiagrams();
+    go();
+  }
+
+  // ---------- inference
+  const inSrc = DATA.claims.filter(c => c.evidence === "inference");
+  $("#infer").innerHTML = `
+    <div class="panel" style="margin-bottom:12px"><h2>원문 작성자가 스스로 끌어낸 추론 (${inSrc.length})</h2>
+      ${inSrc.map(c => `<p>${cref(c.id)} ${esc(c.text)} ${c.dependencies&&c.dependencies.length ? `<span class="sm">← 전제 ${c.dependencies.map(cref).join(" ")}</span>` : ""}</p>`).join("") || `<p class="sm">없음</p>`}
+    </div>
+    <div class="panel"><h2>이 리포트가 덧붙인 해석 — 원문에 없음 (${DATA.inferences.length})</h2>
+      ${DATA.inferences.map(i => `<p><span class="badge ${i.label}">${i.label}</span> <b>${i.id}</b> ${esc(i.text)}<br><span class="sm">근거 ${i.based_on.map(cref).join(" ")} · 이유: ${esc(i.reason)}</span></p>`).join("") || `<p class="sm">없음 — 모든 연결이 원문 Claim으로 뒷받침된다.</p>`}
+    </div>`;
+
+  // ---------- check
+  $("#check").innerHTML = `
+    <div class="panel" style="margin-bottom:12px"><h2>구조·참조 검사</h2><table><tbody>
+      ${Object.entries(DATA.gates).map(([g,v]) => `<tr><td><code>${g}</code></td><td>${esc(gateName[g])}</td><td><span class="gate ${v}">${v}</span></td></tr>`).join("")}
+    </tbody></table></div>
+    <div class="panel" style="margin-bottom:12px"><h2>남은 경고 (${DATA.warnings.length})</h2>
+      <ul class="warnlist">${DATA.warnings.map(w => `<li><code>${esc(w.gate)}</code> <b>${esc(w.where)}</b> ${esc(w.msg)}</li>`).join("") || "<li>없음</li>"}</ul></div>
+    <div class="panel"><h2>Claim을 만들지 않은 원문 단위 (${DATA.skipped.length})</h2>
+      <ul class="warnlist">${DATA.skipped.map(s => `<li><code>${esc(s.unit)}</code> ${esc(s.reason)}</li>`).join("") || "<li>없음</li>"}</ul></div>`;
+
+  // ---------- 읽기 페이지
+  const K = Object.fromEntries((DATA.context||[]).map(x => [x.id, x]));
+  // 의견은 문장 자체가 "작성자는 ~라고 본다"로 밝히므로(검증기가 확인) 밑줄을 긋지 않는다 — 표시는 의심할 곳에만
+  const WEAK = {"source-needed":"w-bad","conflicting":"w-bad","uncertain":"w-warn","inference":"w-warn"};
+  function sentHTML(s){
+    const cls = ["s"];
+    if (WEAK[s._weakest]) cls.push(WEAK[s._weakest]);
+    const noClaims = !(s.claims||[]).length;
+    const onlyCtx = noClaims && (s.context||[]).length, onlyInf = noClaims && !onlyCtx && (s.inferences||[]).length;
+    if (onlyCtx) cls.push("ctx");
+    if (onlyInf) cls.push("inf");
+    const title = onlyCtx ? "원문 밖 배경 설명 (AI가 덧붙임)" : onlyInf ? "원문에 없는 해석 (AI가 덧붙임)" : (s._weakest ? `근거: ${EVL[s._weakest]}${s._low ? " · 근거 약함" : ""}` : "");
+    const cites = (s.claims||[]).map(id => `<sup class="cite" data-cite="${id}">${id}</sup>`).join("")
+      + (s.context||[]).map(id => `<sup class="cite kc" data-ctx="${id}">배경</sup>`).join("")
+      + (s.inferences||[]).map(id => `<sup class="cite ic" data-inf="${id}">해석</sup>`).join("");
+    return `<span class="${cls.join(" ")}" title="${esc(title)}" data-c="${esc((s.claims||[]).join(" "))}" data-k="${esc((s.context||[]).join(" "))}" data-i="${esc((s.inferences||[]).join(" "))}">${esc(s.text)}</span>${cites} `;
+  }
+  function renderEssay(){
+    const N = DATA.narrative;
+    if (!N){ $("#essay").innerHTML = `<p class="sm">이 결과에는 읽기 페이지가 없다(inspect 모드). 검토 모드를 사용한다.</p>`; return; }
+    let h = "";
+    if (N.headline) h += `<p class="headline">${sentHTML(N.headline)}</p>`;
+    h += `<p class="howto"><span class="k">위첨자 <b style="color:var(--accent)">C09</b> = 근거가 된 원문 주장 (누르면 원문 대조)</span>
+      <span class="k"><span class="s w-bad">빨간 점선</span> 출처 없음·충돌</span>
+      <span class="k"><span class="s w-warn">주황 점선</span> 불확실·추론</span>
+      <span class="k"><span class="s ctx">파란 바탕</span> 원문 밖 배경 설명</span>
+      <span class="k"><span class="s inf">주황 바탕</span> 원문에 없는 해석</span></p>`;
+    const reviewIds = new Set(DATA.review.map(r => r.id));
+    (N.sections||[]).forEach(sec => {
+      h += `<h2 id="sec-${sec.id}">${esc(sec.title)}</h2>`;
+      const secClaims = new Set();
+      (sec.blocks||[]).forEach(b => {
+        (b.sentences||[]).forEach(s => (s.claims||[]).forEach(id => secClaims.add(id)));
+        (b.items||[]).forEach(it => (it.claims||[]).forEach(id => secClaims.add(id)));
+        if (b.kind === "text") h += `<p>${(b.sentences||[]).map(sentHTML).join("")}</p>`;
+        else if (b.kind === "callout") h += `<div class="callout">${(b.sentences||[]).map(sentHTML).join("")}</div>`;
+        else if (b.kind === "example") h += `<div class="example"><div class="eh">${esc(b.label || "예시")}</div>${(b.items||[]).map(it => `<div class="ei">${it.label ? `<span class="el">${esc(it.label)}</span>` : ""}<code>${esc(it.quote)}</code>
+            ${(it.claims||[]).map(id => `<sup class="cite" data-cite="${id}">${id}</sup>`).join("")}${(it.context||[]).map(id => `<sup class="cite kc" data-ctx="${id}">배경</sup>`).join("")}</div>`).join("")}</div>`;
+        else if (b.kind === "points") h += `<ul class="pts">${(b.sentences||[]).map(s => `<li>${sentHTML(s)}</li>`).join("")}</ul>`;
+        else if (b.kind === "visual"){
+          const v = DATA.visuals.find(x => x.id === b.ref); if (!v) return;
+          const cap = b.caption || v.title;
+          h += `<figure class="fig">${visualBody(v, "rd")}<figcaption>${esc(cap)}${v.kind === "diagram" ? " — 노드를 누르면 근거가 열린다" : ""}</figcaption>
+            ${v.kind === "diagram" ? `<details><summary>연결마다 근거 보기</summary>${edgeTable(v)}</details>` : ""}</figure>`;
+        }
+      });
+      // 이 섹션이 기댄 Claim 중 우선 검토 대상 — 본문은 원문을 전하고, 의심할 곳은 여기서 짚는다
+      const flagged = [...secClaims].filter(id => reviewIds.has(id));
+      // 같은 메모를 가진 Claim 은 한 줄로 묶는다 (예: 사다리의 세 단계가 같은 지적을 공유)
+      const groups = new Map();
+      flagged.forEach(id => { const k = C[id].review_note || C[id].text; groups.set(k, (groups.get(k) || []).concat(id)); });
+      if (groups.size) h += `<div class="seccheck"><b>이 부분에서 확인할 것</b>${[...groups].map(([note, ids]) => `<button type="button" data-cite="${ids[0]}">${ids.join(" · ")} — ${esc(note)}</button>`).join("")}</div>`;
+    });
+    if (DATA.review.length){
+      h += `<section class="checks"><h2 id="sec-checks">이 글을 믿기 전에 확인할 것</h2>
+        ${DATA.review.slice(0, 7).map(r => { const c = C[r.id]; return `<button type="button" class="ck" data-cite="${r.id}">${esc(c.text)}
+          <span class="why">${esc(r.reason)}${c.review_note ? " — " + esc(c.review_note) : ""}</span></button>`; }).join("")}</section>`;
+    }
+    if ((DATA.context||[]).length){
+      h += `<section class="ctxlist"><h3>배경 설명 — 원문 밖 · AI가 덧붙임${DATA.context.some(x => x.reference) ? "" : " · 외부 확인 안 함"}</h3><dl>
+        ${DATA.context.map(x => `<dt>${esc(x.term)}</dt><dd>${esc(x.text)}${x.reference ? ` <span class="sm">(${esc(x.reference)})</span>` : ""}</dd>`).join("")}</dl></section>`;
+    }
+    h += `<p class="tolink">주장 ${DATA.claims.length}개를 하나씩 대조하려면 <button type="button" data-mode="review">검토 모드</button>로.</p>`;
+    $("#essay").innerHTML = h;
+    $("#toc").innerHTML = `<div class="tt">목차</div>` + (N.sections||[]).map(s => `<a href="#sec-${s.id}">${esc(s.title)}</a>`).join("")
+      + (DATA.review.length ? `<a href="#sec-checks">믿기 전에 확인할 것</a>` : "");
+  }
+  function openDrawer(cids, kids, title, iids){
+    $("#dtitle").textContent = title || "근거";
+    $("#dbody").innerHTML = (cids||[]).filter(id => C[id]).map(id => { const c = C[id]; return `<div class="dc">
+        <div class="row"><span class="cid">${c.id}</span><span class="badge ${c.evidence}">${esc(EVL[c.evidence])}</span><span class="type">${esc((c.type||[]).join(" · "))}</span></div>
+        <div style="margin-top:6px">${esc(c.text)}</div>
+        <div class="lab" style="margin-top:10px">원문</div><div class="sm" style="text-transform:none">${esc(c._loc)}</div><div class="q">${esc(c.source_text)}</div>
+        ${c.review_note ? `<div class="note">⚑ ${esc(c.review_note)}</div>` : ""}
+        <button class="btn" type="button" data-goto-src2="${c.id}">원문 전체에서 보기</button></div>`; }).join("")
+      + (kids||[]).filter(id => K[id]).map(id => { const x = K[id]; return `<div class="dc k">
+        <div class="lab" style="color:var(--ctx)">CONTEXT · 원문 밖 · AI가 덧붙인 설명</div>
+        <div style="margin-top:6px"><b>${esc(x.term)}</b> — ${esc(x.text)}</div>
+        <div class="sm" style="margin-top:6px">왜 넣었나: ${esc(x.reason)}${x.reference ? " · 출처: " + esc(x.reference) : " · 외부 확인 안 함"}</div></div>`; }).join("")
+      + (iids||[]).filter(id => INF[id]).map(id => { const x = INF[id]; return `<div class="dc k" style="border-left-color:var(--warn)">
+        <div class="lab" style="color:var(--warn)">${esc(x.label)} · 원문에 없음 · AI가 덧붙인 해석</div>
+        <div style="margin-top:6px">${esc(x.text)}</div>
+        <div class="sm" style="margin-top:6px">기댄 원문 주장: ${x.based_on.map(cref).join(" ")}<br>왜 넣었나: ${esc(x.reason)}</div></div>`; }).join("");
+    $("#drawer").classList.add("open"); $("#drawer").setAttribute("aria-hidden", "false");
+  }
+  function closeDrawer(){ $("#drawer").classList.remove("open"); $("#drawer").setAttribute("aria-hidden", "true"); }
+  $("#dclose").onclick = closeDrawer;
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+  $("#dbody").addEventListener("click", e => { const b = e.target.closest("[data-goto-src2]"); if (b){ closeDrawer(); gotoSource(b.dataset.gotoSrc2); } });
+  $("#essay").addEventListener("click", e => {
+    const ck = e.target.closest(".ck, .seccheck button"); if (ck) return openDrawer([ck.dataset.cite], [], "확인할 주장");
+    const ic = e.target.closest("sup.cite.ic"); if (ic) return openDrawer([], [], "덧붙인 해석", [ic.dataset.inf]);
+    const ec = e.target.closest(".example sup.cite"); if (ec) return ec.dataset.ctx ? openDrawer([], [ec.dataset.ctx], "배경 설명") : openDrawer([ec.dataset.cite], [], "예시의 근거");
+    const c = e.target.closest("sup.cite");
+    if (c){
+      // 위첨자 바로 앞의 문장 span 을 찾는다 (위첨자가 여러 개면 거슬러 올라간다)
+      let span = c; while (span && !span.classList.contains("s")) span = span.previousElementSibling;
+      const cids = span ? span.dataset.c.split(" ").filter(Boolean) : [], kids = span ? span.dataset.k.split(" ").filter(Boolean) : [];
+      if (span){ span.classList.add("flash"); setTimeout(() => span.classList.remove("flash"), 1200); }
+      return openDrawer(c.dataset.ctx ? [] : cids, c.dataset.ctx ? kids : [], c.dataset.ctx ? "배경 설명" : "이 문장의 근거");
+    }
+  });
+
+  // ---------- 모드
+  function setMode(m){
+    if (m === "read" && !DATA.narrative) m = "review";
+    $("#mode-read").hidden = m !== "read"; $("#mode-review").hidden = m !== "review";
+    $$(".modes button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === m ? "true" : "false"));
+    $("#kicker").textContent = m === "read" ? "읽기 · 원문 주장으로 추적되는 설명" : "검토 · Understanding Report";
+    if (location.hash !== "#" + m) history.replaceState(null, "", "#" + m);
+    if (m === "review") closeDrawer();
+    setTimeout(renderDiagrams, 0);
+  }
+  document.addEventListener("click", e => { const b = e.target.closest("[data-mode]"); if (b && b.tagName === "BUTTON") setMode(b.dataset.mode); });
+
+  renderEssay();
+  syncControls(); renderCards();
+  setMode(location.hash === "#review" || !DATA.narrative ? "review" : "read");
+})();
+</script>
+</body>
+</html>

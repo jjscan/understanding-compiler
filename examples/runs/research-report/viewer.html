@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-iMigw7CZlkZdhV3FxH/Z2GuuejPxPn6vUyFcKleebSY=' 'sha256-4+rTxLqBxNuiQ8RHkYebX3KCmleWQEuoPeJL4mvtPx0='; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; worker-src 'none'; media-src 'none'; manifest-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>원격 근무와 신입 개발자 온보딩 기간: 사내 조사 보고서 · Understanding Report</title>
+<style>
+:root{
+  --bg:#f7f7f5; --panel:#ffffff; --ink:#1d1f21; --ink2:#55595e; --ink3:#868b91; --line:#e3e3df; --soft:#f0f0ec;
+  --accent:#1c5fd1; --accent-soft:#e8f0fd; --mark:#fff1a8;
+  --ok:#2f855a; --ok-bg:#e7f5ec; --warn:#b35c00; --warn-bg:#fff4e0; --bad:#c22f2f; --bad-bg:#fdecec;
+  --info:#5f3dc4; --info-bg:#f1edff; --mute:#5c636a; --mute-bg:#eef0f2;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --sans: "Pretendard", "Apple SD Gothic Neo", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#141517; --panel:#1c1d20; --ink:#e8e9eb; --ink2:#b3b7bc; --ink3:#80858b; --line:#2e3034; --soft:#232428;
+  --accent:#7aa7ff; --accent-soft:#1e2a44; --mark:#5c4d00;
+  --ok:#6bd39a; --ok-bg:#16301f; --warn:#ffb85c; --warn-bg:#3a2a10; --bad:#ff8080; --bad-bg:#3b1a1a;
+  --info:#b4a2ff; --info-bg:#2a2245; --mute:#a7adb3; --mute-bg:#2a2c30;
+}}
+:root[data-theme="dark"]{
+  --bg:#141517; --panel:#1c1d20; --ink:#e8e9eb; --ink2:#b3b7bc; --ink3:#80858b; --line:#2e3034; --soft:#232428;
+  --accent:#7aa7ff; --accent-soft:#1e2a44; --mark:#5c4d00;
+  --ok:#6bd39a; --ok-bg:#16301f; --warn:#ffb85c; --warn-bg:#3a2a10; --bad:#ff8080; --bad-bg:#3b1a1a;
+  --info:#b4a2ff; --info-bg:#2a2245; --mute:#a7adb3; --mute-bg:#2a2c30;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 16px 80px}
+header .kicker{font:600 12px/1 var(--mono);letter-spacing:.14em;color:var(--ink3);text-transform:uppercase}
+header h1{font-size:26px;line-height:1.3;margin:8px 0 6px;letter-spacing:-.01em}
+header .meta{color:var(--ink2);font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gates{margin-top:12px}
+.gate{font:600 11px/1 var(--mono);padding:5px 7px;border-radius:5px;border:1px solid var(--line);background:var(--panel)}
+.gate.PASS{color:var(--ok)} .gate.FAIL{color:var(--bad);border-color:var(--bad)}
+.themebtn{margin-left:auto;font:12px var(--sans);background:var(--panel);color:var(--ink2);border:1px solid var(--line);border-radius:6px;padding:5px 9px;cursor:pointer}
+
+.stats{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin:22px 0 14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:inherit;font:inherit}
+.stat:hover{border-color:var(--accent)}
+.stat .n{font:700 26px/1.1 var(--sans);font-variant-numeric:tabular-nums}
+.stat .l{font-size:12px;color:var(--ink2);margin-top:4px}
+.stat.ok .n{color:var(--ok)} .stat.bad .n{color:var(--bad)} .stat.warn .n{color:var(--warn)} .stat.info .n{color:var(--info)}
+@media (max-width:900px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:520px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.panel h2{font:700 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:0 0 12px}
+.review-item{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:9px 0;border-top:1px solid var(--line);cursor:pointer}
+.review-item:first-of-type{border-top:0}
+.review-item:hover .rt{color:var(--accent)}
+.review-item .rid{font:700 13px var(--mono)}
+.review-item .rr{font-size:12px;color:var(--bad)}
+.review-item .rt{grid-column:2;font-size:14px}
+.sum li{margin:0 0 8px} .sum{padding-left:18px;margin:0}
+
+.tabs{display:flex;gap:2px;margin:26px 0 0;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;font:600 14px var(--sans);color:var(--ink2);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.pane{display:none;padding-top:16px} .pane.on{display:block}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.toolbar input[type=search]{flex:1 1 220px;min-width:0;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit}
+.toolbar select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit}
+.chip{font:600 12px var(--sans);padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink2);cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.countline{font-size:13px;color:var(--ink3);margin:4px 0 10px}
+.filternote{display:none;font-size:13px;background:var(--accent-soft);color:var(--accent);padding:6px 10px;border-radius:8px;margin-bottom:10px}
+.filternote button{background:none;border:0;color:inherit;font-weight:700;cursor:pointer}
+
+.card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--mute);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.card.ev-verified,.card.ev-supported{border-left-color:var(--ok)}
+.card.ev-source-needed,.card.ev-conflicting{border-left-color:var(--bad)}
+.card.ev-uncertain,.card.ev-inference{border-left-color:var(--warn)}
+.card.ev-opinion{border-left-color:var(--info)}
+.card.flash{outline:2px solid var(--accent);outline-offset:2px}
+.card .top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;cursor:pointer}
+.cid{font:700 13px var(--mono)}
+.badge{font:600 11px/1 var(--sans);padding:4px 7px;border-radius:5px;background:var(--mute-bg);color:var(--mute)}
+.badge.verified,.badge.supported{background:var(--ok-bg);color:var(--ok)}
+.badge.source-needed,.badge.conflicting{background:var(--bad-bg);color:var(--bad)}
+.badge.uncertain,.badge.inference{background:var(--warn-bg);color:var(--warn)}
+.badge.opinion{background:var(--info-bg);color:var(--info)}
+.badge.INFERENCE,.badge.INTERPRETATION{background:var(--warn-bg);color:var(--warn);font-family:var(--mono)}
+.type{font:11px var(--mono);color:var(--ink3)}
+.card .txt{margin:6px 0 2px;font-size:15px;cursor:pointer}
+.card .loc{font:12px var(--mono);color:var(--ink3)}
+.card .more{display:none;margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+.card.open .more{display:block}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:640px){.cmp{grid-template-columns:1fr}}
+.cmp div{background:var(--soft);border-radius:8px;padding:8px 10px;font-size:14px}
+.cmp .h{font:600 11px var(--mono);color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;background:none;padding:0}
+.kv{font-size:13px;color:var(--ink2);margin-top:8px}
+.kv b{color:var(--ink)}
+.note{font-size:13px;background:var(--bad-bg);color:var(--bad);border-radius:6px;padding:6px 9px;margin-top:8px}
+.btn{font:600 12px var(--sans);padding:6px 10px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--accent);cursor:pointer;margin:8px 6px 0 0}
+
+.vis{margin-bottom:22px}
+.vis h3{font-size:16px;margin:0 0 8px}
+.diagram{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto;text-align:center}
+.diagram svg{max-width:100%;height:auto}
+.diagram g.node{cursor:pointer}
+.diagram g.node.hl rect,.diagram g.node.hl polygon,.diagram g.node.hl circle,.diagram g.node.hl path{stroke:var(--accent)!important;stroke-width:4px!important}
+.diagram pre{text-align:left;font:12px var(--mono);white-space:pre-wrap}
+table{border-collapse:collapse;width:100%;font-size:13px;background:var(--panel)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600}
+.tablewrap{overflow-x:auto;margin-top:8px}
+td .cref{font:600 12px var(--mono);color:var(--accent);cursor:pointer;text-decoration:underline dotted}
+.legend{font-size:12px;color:var(--ink3);margin:6px 0 0}
+ol.flow{padding-left:22px} ol.flow li{margin-bottom:6px}
+
+.unit{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:8px 10px;border-radius:8px;border:1px solid transparent}
+.unit .uid{font:600 12px var(--mono);color:var(--ink3);padding-top:2px}
+.unit.heading .ut{font-weight:700;font-size:16px}
+.unit.code .ut{font:12px var(--mono);white-space:pre-wrap;color:var(--ink2)}
+.unit.focus{border-color:var(--accent);background:var(--accent-soft)}
+.unit.skipped .ut{color:var(--ink3)}
+.unit .uc{margin-top:4px;display:flex;gap:4px;flex-wrap:wrap}
+mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 1px}
+.sm{font-size:12px;color:var(--ink3)}
+.warnlist li{font-size:13px;margin-bottom:4px}
+code{font-family:var(--mono);font-size:.92em}
+
+/* ---------- 모드 전환 */
+.modes{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-left:auto}
+.modes button{background:var(--panel);color:var(--ink2);border:0;padding:6px 12px;font:600 13px var(--sans);cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.themebtn{margin-left:8px}
+[hidden]{display:none!important}
+
+/* ---------- 읽기 페이지 */
+:root{--ctx:#0b7285;--ctx-bg:#e3f6f8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ctx:#66d9e8;--ctx-bg:#0f2f34}}
+:root[data-theme="dark"]{--ctx:#66d9e8;--ctx-bg:#0f2f34}
+.read{display:grid;grid-template-columns:1fr;gap:32px;margin-top:28px}
+@media (min-width:1080px){.read{grid-template-columns:200px minmax(0,1fr)}}
+.toc{display:none}
+@media (min-width:1080px){.toc{display:block;position:sticky;top:24px;align-self:start;font-size:13px}}
+.toc a{display:block;color:var(--ink2);text-decoration:none;padding:5px 0 5px 10px;border-left:2px solid var(--line)}
+.toc a:hover{color:var(--accent);border-left-color:var(--accent)}
+.toc .tt{font:600 11px var(--mono);letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;margin-bottom:8px}
+article.essay{max-width:720px;font-size:17px;line-height:1.85}
+.headline{font-size:22px;line-height:1.55;font-weight:700;letter-spacing:-.01em;margin:0 0 10px;padding:18px 20px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
+.howto{font-size:13px;color:var(--ink3);margin:0 0 28px;line-height:1.6}
+.howto .k{display:inline-block;margin-right:10px;white-space:nowrap}
+article.essay h2{font-size:21px;margin:42px 0 12px;letter-spacing:-.01em;scroll-margin-top:20px}
+article.essay p{margin:0 0 16px}
+article.essay ul.pts{margin:0 0 16px;padding-left:22px}
+article.essay ul.pts li{margin-bottom:8px}
+.s{border-radius:3px}
+.s.w-bad{text-decoration:underline dotted var(--bad) 2px;text-underline-offset:4px}
+.s.w-warn{text-decoration:underline dotted var(--warn) 2px;text-underline-offset:4px}
+.s.w-op{text-decoration:underline dotted var(--info) 2px;text-underline-offset:4px}
+.s.ctx{background:var(--ctx-bg);box-shadow:0 0 0 2px var(--ctx-bg)}
+.s.inf{background:var(--warn-bg);box-shadow:0 0 0 2px var(--warn-bg)}
+sup.cite.ic{color:var(--warn)}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;font-weight:600}
+.example{border:1px solid var(--line);border-radius:10px;background:var(--panel);margin:18px 0;overflow:hidden}
+.example .eh{font:600 12px var(--mono);letter-spacing:.06em;color:var(--ink3);padding:9px 14px;border-bottom:1px solid var(--line);background:var(--soft)}
+.example .ei{padding:10px 14px;border-top:1px solid var(--line);font-size:15px;line-height:1.6}
+.example .ei:first-of-type{border-top:0}
+.example .el{display:block;font-size:12px;color:var(--ink3);margin-bottom:3px}
+.example code{font-size:14px;white-space:pre-wrap;word-break:break-word}
+.seccheck{font-size:14px;color:var(--ink2);border:1px dashed var(--bad);border-radius:10px;padding:10px 14px;margin:6px 0 10px}
+.seccheck b{color:var(--bad);font-size:12px;letter-spacing:.04em}
+.seccheck button{display:block;text-align:left;background:none;border:0;padding:3px 0;font:inherit;color:inherit;cursor:pointer}
+.seccheck button:hover{color:var(--accent)}
+.s.flash{background:var(--mark)}
+sup.cite{font:600 10.5px var(--mono);color:var(--accent);cursor:pointer;margin-left:2px;white-space:nowrap;vertical-align:super;line-height:0}
+sup.cite.kc{color:var(--ctx)}
+sup.cite:hover{text-decoration:underline}
+figure.fig{margin:22px 0 26px;font-size:14px;line-height:1.6}
+figure.fig .diagram svg{max-height:640px}
+figure.fig figcaption{font-size:13px;color:var(--ink2);margin-top:8px}
+figure.fig details{margin-top:8px;font-size:13px}
+figure.fig summary{cursor:pointer;color:var(--ink3)}
+.checks{margin-top:46px;padding-top:8px;border-top:1px solid var(--line)}
+.checks .ck{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--bad);border-radius:10px;padding:12px 14px;margin-bottom:10px;cursor:pointer;font-size:15px;line-height:1.6}
+.checks .ck:hover{border-color:var(--accent)}
+.checks .ck .why{display:block;font-size:13px;color:var(--ink2);margin-top:4px}
+.ctxlist{margin-top:30px;background:var(--ctx-bg);border-radius:12px;padding:14px 18px;font-size:14px;line-height:1.7}
+.ctxlist h3{margin:0 0 6px;font-size:13px;color:var(--ctx);letter-spacing:.04em}
+.ctxlist dt{font-weight:700;margin-top:8px}
+.ctxlist dd{margin:0}
+.tolink{margin:36px 0 0;font-size:14px;color:var(--ink2)}
+.tolink button{font:600 14px var(--sans);color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+
+/* ---------- 근거 패널 */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:var(--panel);border-left:1px solid var(--line);box-shadow:-12px 0 32px rgba(0,0,0,.12);padding:18px 18px 40px;overflow-y:auto;z-index:20;transform:translateX(100%);transition:transform .18s ease}
+.drawer.open{transform:none}
+@media (max-width:640px){.drawer{top:auto;width:100vw;height:72vh;border-left:0;border-top:1px solid var(--line);border-radius:14px 14px 0 0;transform:translateY(100%)}}
+.drawer .dh{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.drawer .dh b{font-size:14px}
+.drawer .x{margin-left:auto;background:none;border:1px solid var(--line);border-radius:6px;color:var(--ink2);cursor:pointer;padding:3px 9px;font:inherit}
+.dc{border-top:1px solid var(--line);padding:12px 0}
+.dc .q{font-size:14px;background:var(--soft);border-radius:8px;padding:8px 10px;margin:8px 0;font-style:italic}
+.dc .lab{font:600 11px var(--mono);color:var(--ink3);text-transform:uppercase;letter-spacing:.08em}
+.dc.k{border-left:3px solid var(--ctx);padding-left:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="row"><span class="kicker" id="kicker">Understanding Report</span>
+      <span class="modes" role="group" aria-label="보기 방식"><button type="button" data-mode="read" aria-pressed="true">읽기</button><button type="button" data-mode="review" aria-pressed="false">검토</button></span>
+      <button class="themebtn" id="themebtn" type="button">테마</button></div>
+    <h1 id="title"></h1>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <div class="read" id="mode-read">
+    <nav class="toc" id="toc" aria-label="목차"></nav>
+    <article class="essay" id="essay"></article>
+  </div>
+
+  <div id="mode-review" hidden>
+  <div class="row gates" id="gates"></div>
+  <section class="stats" id="stats" aria-label="한눈에 보기"></section>
+
+  <div class="grid2">
+    <section class="panel"><h2>Review First</h2><div id="review"></div></section>
+    <section class="panel"><h2>요약 · 근거 Claim</h2><ul class="sum" id="summary"></ul></section>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="claims" aria-selected="true">Claims</button>
+    <button class="tab" role="tab" data-tab="struct">구조</button>
+    <button class="tab" role="tab" data-tab="source">원문</button>
+    <button class="tab" role="tab" data-tab="infer">추론</button>
+    <button class="tab" role="tab" data-tab="check">검증</button>
+  </nav>
+
+  <section class="pane on" id="pane-claims">
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="Claim 검색 (문장 · 원문 · ID)">
+      <select id="ftype"><option value="">유형: 전체</option></select>
+    </div>
+    <div class="chips" id="evchips"></div>
+    <div class="chips">
+      <button class="chip" data-quick="review">검토 필요만</button>
+      <button class="chip" data-quick="source-needed">source-needed만</button>
+      <button class="chip" data-quick="uncertain">uncertain만</button>
+      <button class="chip" data-quick="flagged">플래그 있음</button>
+      <button class="chip" data-quick="core">핵심만</button>
+      <button class="chip" data-quick="reset">전체</button>
+    </div>
+    <div class="filternote" id="filternote"></div>
+    <div class="countline" id="countline"></div>
+    <div id="cards"></div>
+  </section>
+
+  <section class="pane" id="pane-struct"><div id="visuals"></div></section>
+  <section class="pane" id="pane-source"><p class="sm">원문을 고쳐 쓰지 않은 그대로의 단위다. 하이라이트는 선택한 Claim의 <code>source_text</code>.</p><div id="units"></div></section>
+  <section class="pane" id="pane-infer"><div id="infer"></div></section>
+  <section class="pane" id="pane-check"><div id="check"></div></section>
+  </div>
+</div>
+<aside class="drawer" id="drawer" aria-label="근거" aria-hidden="true"><div class="dh"><b id="dtitle">근거</b><button class="x" type="button" id="dclose">닫기</button></div><div id="dbody"></div></aside>
+
+<script>
+const DATA = {"meta": {"title": "원격 근무와 신입 개발자 온보딩 기간: 사내 조사 보고서", "mode": "understand", "source_path": "source.md", "source_kind": "research-report", "created": "2026-10-03", "external_verification": false}, "counts": {"total": 26, "grounded": 8, "source_needed": 2, "inference": 6, "low_confidence": 4, "inference_in_source": 3, "inference_added": 3, "uncertain": 3, "conflicting": 0, "model_claim": 8, "opinion": 2, "by_evidence": {"verified": 0, "supported": 8, "source-needed": 2, "model-claim": 8, "inference": 3, "opinion": 2, "uncertain": 3, "conflicting": 0}, "by_type": {"fact": 15, "quantitative": 10, "comparison": 5, "causal": 5, "uncertain": 3, "opinion": 2, "definition": 1, "prediction": 1, "conditional": 1}, "fact": 15}, "units": [{"id": "P01", "kind": "heading", "text": "원격 근무와 신입 개발자 온보딩 기간: 사내 조사 보고서", "line_start": 1, "line_end": 1, "section": "원격 근무와 신입 개발자 온보딩 기간: 사내 조사 보고서"}, {"id": "P02", "kind": "quote", "text": "테스트 케이스 B — 리서치 보고서. 가상의 회사 데이터를 쓰는 예시 문서다. 수치는 실제 통계가 아니다.", "line_start": 3, "line_end": 3, "section": "원격 근무와 신입 개발자 온보딩 기간: 사내 조사 보고서"}, {"id": "P03", "kind": "heading", "text": "요약", "line_start": 5, "line_end": 5, "section": "요약"}, {"id": "P04", "kind": "paragraph", "text": "원격 근무 팀에 합류한 신입 개발자는 사무실 근무 팀보다 첫 PR 머지까지 더 오래 걸렸다. 다만 멘토 페어링을 운영한 원격 팀에서는 차이가 거의 없었다.", "line_start": 7, "line_end": 7, "section": "요약"}, {"id": "P05", "kind": "heading", "text": "1. 조사 방법", "line_start": 9, "line_end": 9, "section": "1. 조사 방법"}, {"id": "P06", "kind": "paragraph", "text": "2024년 3월부터 2025년 2월까지 입사한 신입 개발자 86명의 저장소 기록을 분석했다. 원격 팀 소속은 47명, 사무실 팀 소속은 39명이다. 첫 PR 머지까지 걸린 영업일 수를 온보딩 기간의 대리 지표로 사용했다.", "line_start": 11, "line_end": 11, "section": "1. 조사 방법"}, {"id": "P07", "kind": "heading", "text": "2. 결과", "line_start": 13, "line_end": 13, "section": "2. 결과"}, {"id": "P08", "kind": "table-row", "text": "| 집단 | 인원 | 첫 PR 머지까지 중앙값(영업일) |", "line_start": 15, "line_end": 15, "section": "2. 결과"}, {"id": "P09", "kind": "table-row", "text": "| 사무실 팀 | 39 | 6 |", "line_start": 17, "line_end": 17, "section": "2. 결과"}, {"id": "P10", "kind": "table-row", "text": "| 원격 팀(멘토 페어링 없음) | 28 | 11 |", "line_start": 18, "line_end": 18, "section": "2. 결과"}, {"id": "P11", "kind": "table-row", "text": "| 원격 팀(멘토 페어링 있음) | 19 | 7 |", "line_start": 19, "line_end": 19, "section": "2. 결과"}, {"id": "P12", "kind": "paragraph", "text": "원격 팀 전체의 중앙값은 9영업일로 사무실 팀보다 3영업일 길었다.", "line_start": 21, "line_end": 21, "section": "2. 결과"}, {"id": "P13", "kind": "paragraph", "text": "멘토 페어링 팀의 신입은 첫 달 코드 리뷰 코멘트를 평균 2.4배 더 많이 받았다(리뷰 시스템 로그 기준).", "line_start": 23, "line_end": 23, "section": "2. 결과"}, {"id": "P14", "kind": "heading", "text": "3. 해석", "line_start": 25, "line_end": 25, "section": "3. 해석"}, {"id": "P15", "kind": "paragraph", "text": "멘토 페어링이 원격 근무의 온보딩 지연을 해소한다. 리뷰 코멘트가 많을수록 신입이 코드베이스의 관습을 빨리 익히기 때문으로 보인다.", "line_start": 27, "line_end": 27, "section": "3. 해석"}, {"id": "P16", "kind": "paragraph", "text": "외부 연구도 비슷한 경향을 보고한다. GitLab의 2023 원격 근무 보고서는 원격 신입의 생산성 도달 시간이 더 길다고 밝혔다.", "line_start": 29, "line_end": 29, "section": "3. 해석"}, {"id": "P17", "kind": "heading", "text": "4. 한계", "line_start": 31, "line_end": 31, "section": "4. 한계"}, {"id": "P18", "kind": "paragraph", "text": "표본이 86명으로 작고, 팀 배정이 무작위가 아니다. 멘토 페어링은 희망한 팀만 운영했으므로, 원래 온보딩에 관심이 많은 팀이었을 가능성이 있다.", "line_start": 33, "line_end": 33, "section": "4. 한계"}, {"id": "P19", "kind": "paragraph", "text": "첫 PR 머지 시점은 팀마다 PR 크기 기준이 달라 직접 비교하기 어렵다.", "line_start": 35, "line_end": 35, "section": "4. 한계"}, {"id": "P20", "kind": "heading", "text": "5. 권고", "line_start": 37, "line_end": 37, "section": "5. 권고"}, {"id": "P21", "kind": "paragraph", "text": "모든 원격 팀에 멘토 페어링을 의무화해야 한다. 이렇게 하면 온보딩 기간이 사무실 팀 수준으로 줄어들 것이다.", "line_start": 39, "line_end": 39, "section": "5. 권고"}], "claims": [{"id": "C01", "text": "보고서의 수치는 실제 통계가 아닌 가상의 회사 데이터다.", "type": ["fact"], "source_text": "가상의 회사 데이터를 쓰는 예시 문서다. 수치는 실제 통계가 아니다.", "source_location": "P02", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "supporting", "review_note": "문서 머리의 고지문. 이후 모든 수치(C04~C13)와 외부 인용(C17·C18)을 읽는 전제다.", "_score": 35, "_loc": "P02 (3행, §원격 근무와 신입 개발자 온보딩 기간: 사내 조사 보고서)"}, {"id": "C02", "text": "원격 팀의 신입 개발자는 사무실 팀보다 첫 PR 머지까지 더 오래 걸렸다.", "type": ["comparison", "fact"], "source_text": "원격 근무 팀에 합류한 신입 개발자는 사무실 근무 팀보다 첫 PR 머지까지 더 오래 걸렸다.", "source_location": "P04", "evidence": "supported", "confidence": "low", "visualization": "text", "evidence_ref": "2. 결과 표(P09~P11)와 원격 팀 전체 중앙값 문장(P12)", "importance": "core", "flags": ["missing-condition"], "entities": ["E01", "E02", "E05", "E06"], "review_note": "요약은 '중앙값' 기준이라는 조건을 빼고 말한다. 원문 한계(C24)는 첫 PR 머지 시점을 팀 간에 직접 비교하기 어렵다고 스스로 밝힌다 → confidence low.", "_score": 55, "_loc": "P04 (7행, §요약)"}, {"id": "C03", "text": "멘토 페어링 원격 팀은 사무실 팀과 첫 PR 머지 기간 차이가 거의 없었다.", "type": ["comparison", "fact"], "source_text": "다만 멘토 페어링을 운영한 원격 팀에서는 차이가 거의 없었다.", "source_location": "P04", "evidence": "supported", "confidence": "low", "visualization": "text", "evidence_ref": "2. 결과 표 P11(멘토 페어링 원격 팀)·P09(사무실 팀) 행", "importance": "core", "risk": "high", "flags": ["vague"], "entities": ["E03", "E02"], "review_note": "'거의 없었다'는 평가어다. 표 값은 7 대 6영업일이고 표본은 19명 대 39명. 무엇을 '거의 없음'으로 볼지 기준이 없다.", "_score": 85, "_loc": "P04 (7행, §요약)"}, {"id": "C04", "text": "본 조사는 2024년 3월부터 2025년 2월까지 입사한 신입 개발자 86명의 저장소 기록을 분석했다.", "type": ["fact", "quantitative"], "source_text": "2024년 3월부터 2025년 2월까지 입사한 신입 개발자 86명의 저장소 기록을 분석했다.", "source_location": "P06", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "supporting", "entities": ["E05"], "_score": 35, "_loc": "P06 (11행, §1. 조사 방법)"}, {"id": "C05", "text": "원격 팀 소속 신입 개발자는 47명이다.", "type": ["fact", "quantitative"], "source_text": "원격 팀 소속은 47명", "source_location": "P06", "evidence": "model-claim", "confidence": "unknown", "visualization": "table", "importance": "detail", "flags": ["compound-split"], "entities": ["E01"], "review_note": "P06 둘째 문장을 C05·C06으로 나눔. 47 = 표의 28 + 19와 일치.", "_score": 35, "_loc": "P06 (11행, §1. 조사 방법)"}, {"id": "C06", "text": "사무실 팀 소속 신입 개발자는 39명이다.", "type": ["fact", "quantitative"], "source_text": "사무실 팀 소속은 39명이다", "source_location": "P06", "evidence": "model-claim", "confidence": "unknown", "visualization": "table", "importance": "detail", "flags": ["compound-split"], "entities": ["E02"], "review_note": "P06 둘째 문장을 C05·C06으로 나눔. 표의 사무실 팀 인원과 일치.", "_score": 35, "_loc": "P06 (11행, §1. 조사 방법)"}, {"id": "C07", "text": "본 조사는 첫 PR 머지까지 걸린 영업일 수를 온보딩 기간의 대리 지표로 사용했다.", "type": ["definition"], "source_text": "첫 PR 머지까지 걸린 영업일 수를 온보딩 기간의 대리 지표로 사용했다.", "source_location": "P06", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "core", "risk": "medium", "entities": ["E06", "E07"], "review_note": "측정값(첫 PR 머지 영업일)과 결론의 대상(온보딩 기간)이 다르다. 해석(C14)·권고(C26)는 대리 지표가 아니라 '온보딩 기간' 자체를 말한다.", "_score": 55, "_loc": "P06 (11행, §1. 조사 방법)"}, {"id": "C08", "text": "사무실 팀 신입 개발자 39명의 첫 PR 머지까지 중앙값은 6영업일이다.", "type": ["fact", "quantitative"], "source_text": "| 사무실 팀 | 39 | 6 |", "source_location": "P09", "evidence": "supported", "confidence": "unknown", "visualization": "table", "evidence_ref": "2. 결과 표 — 저장소 기록 분석(P06) 사내 데이터, 원자료 미공개", "importance": "supporting", "entities": ["E02", "E06"], "_score": 10, "_loc": "P09 (17행, §2. 결과)"}, {"id": "C09", "text": "멘토 페어링 없는 원격 팀 신입 개발자 28명의 첫 PR 머지까지 중앙값은 11영업일이다.", "type": ["fact", "quantitative"], "source_text": "| 원격 팀(멘토 페어링 없음) | 28 | 11 |", "source_location": "P10", "evidence": "supported", "confidence": "unknown", "visualization": "table", "evidence_ref": "2. 결과 표 — 저장소 기록 분석(P06) 사내 데이터, 원자료 미공개", "importance": "supporting", "entities": ["E04", "E06"], "_score": 10, "_loc": "P10 (18행, §2. 결과)"}, {"id": "C10", "text": "멘토 페어링 원격 팀 신입 개발자 19명의 첫 PR 머지까지 중앙값은 7영업일이다.", "type": ["fact", "quantitative"], "source_text": "| 원격 팀(멘토 페어링 있음) | 19 | 7 |", "source_location": "P11", "evidence": "supported", "confidence": "unknown", "visualization": "table", "evidence_ref": "2. 결과 표 — 저장소 기록 분석(P06) 사내 데이터, 원자료 미공개", "importance": "supporting", "entities": ["E03", "E06"], "_score": 10, "_loc": "P11 (19행, §2. 결과)"}, {"id": "C11", "text": "원격 팀 전체의 첫 PR 머지까지 중앙값은 9영업일이다.", "type": ["fact", "quantitative"], "source_text": "원격 팀 전체의 중앙값은 9영업일로 사무실 팀보다 3영업일 길었다.", "source_location": "P12", "evidence": "supported", "confidence": "unknown", "visualization": "table", "evidence_ref": "2. 결과 표 — 저장소 기록 분석(P06) 사내 데이터, 원자료 미공개", "importance": "supporting", "flags": ["compound-split"], "entities": ["E01", "E06"], "review_note": "하위 집단 중앙값(11, 7)만으로는 전체 중앙값 9를 다시 계산할 수 없다. 원자료로만 확인 가능.", "_score": 10, "_loc": "P12 (21행, §2. 결과)"}, {"id": "C12", "text": "원격 팀 전체의 중앙값은 사무실 팀 중앙값보다 3영업일 길었다.", "type": ["comparison", "quantitative"], "source_text": "원격 팀 전체의 중앙값은 9영업일로 사무실 팀보다 3영업일 길었다.", "source_location": "P12", "evidence": "supported", "confidence": "low", "visualization": "text", "evidence_ref": "2. 결과 표 — 저장소 기록 분석(P06) 사내 데이터, 원자료 미공개", "importance": "core", "flags": ["compound-split"], "entities": ["E01", "E02"], "review_note": "9 − 6 = 3으로 표와 산술은 맞다. 다만 한계(C24)대로 팀마다 PR 크기 기준이 달라 직접 비교의 의미가 약하다.", "_score": 35, "_loc": "P12 (21행, §2. 결과)"}, {"id": "C13", "text": "멘토 페어링 팀의 신입 개발자는 첫 달에 코드 리뷰 코멘트를 평균 2.4배 더 많이 받았다.", "type": ["comparison", "quantitative"], "source_text": "멘토 페어링 팀의 신입은 첫 달 코드 리뷰 코멘트를 평균 2.4배 더 많이 받았다(리뷰 시스템 로그 기준).", "source_location": "P13", "evidence": "supported", "confidence": "low", "visualization": "diagram", "evidence_ref": "리뷰 시스템 로그 기준", "importance": "supporting", "flags": ["number-unclear", "naming-drift"], "entities": ["E05"], "review_note": "비교 대상이 없다(멘토 페어링 없는 원격 팀? 사무실 팀? 나머지 전체?). '2.4배 더 많이'가 2.4배인지 3.4배인지도 모호. '멘토 페어링 팀'이 표의 '원격 팀(멘토 페어링 있음)'과 같은 집단인지 원문이 확정하지 않는다.", "_score": 65, "_loc": "P13 (23행, §2. 결과)"}, {"id": "C14", "text": "멘토 페어링은 원격 근무의 온보딩 지연을 해소한다.", "type": ["causal"], "source_text": "멘토 페어링이 원격 근무의 온보딩 지연을 해소한다.", "source_location": "P15", "evidence": "inference", "confidence": "unknown", "visualization": "diagram", "importance": "core", "risk": "high", "flags": ["unsupported", "fact-inference-mix"], "dependencies": ["C08", "C09", "C10"], "entities": ["E07"], "review_note": "관찰 자료(비무작위 배정 C20, 희망 팀만 운영 C21, 자기 선택 가능성 C22, 비교 곤란 C24)에서 단정형 인과를 끌어냈다. 원문 한계 절이 스스로 이 인과 해석을 약화시키는데 해석 절은 유보 없이 말한다. 측정값도 온보딩 기간이 아니라 대리 지표(C07)다.", "_score": 145, "_loc": "P15 (27행, §3. 해석)"}, {"id": "C15", "text": "리뷰 코멘트가 많을수록 신입 개발자가 코드베이스의 관습을 빨리 익히는 것으로 보인다.", "type": ["causal", "uncertain"], "source_text": "리뷰 코멘트가 많을수록 신입이 코드베이스의 관습을 빨리 익히기 때문으로 보인다.", "source_location": "P15", "evidence": "uncertain", "confidence": "unknown", "visualization": "diagram", "importance": "supporting", "flags": ["compound-split"], "entities": ["E05"], "review_note": "'관습을 익히는 속도'는 조사에서 측정하지 않았다. 원문도 '보인다'로 유보한다.", "_score": 65, "_loc": "P15 (27행, §3. 해석)"}, {"id": "C16", "text": "멘토 페어링이 온보딩 지연을 해소하는 이유는 리뷰 코멘트가 관습 습득을 빠르게 하기 때문으로 보인다.", "type": ["causal", "uncertain"], "source_text": "리뷰 코멘트가 많을수록 신입이 코드베이스의 관습을 빨리 익히기 때문으로 보인다.", "source_location": "P15", "evidence": "uncertain", "confidence": "unknown", "visualization": "diagram", "importance": "supporting", "flags": ["compound-split"], "dependencies": ["C13", "C14", "C15"], "review_note": "원문 '때문으로 보인다'를 메커니즘(C15)과 '그것이 C14의 이유'(C16)로 나눔.", "_score": 65, "_loc": "P15 (27행, §3. 해석)"}, {"id": "C17", "text": "외부 연구도 이 조사와 비슷한 경향을 보고한다.", "type": ["fact"], "source_text": "외부 연구도 비슷한 경향을 보고한다.", "source_location": "P16", "evidence": "source-needed", "confidence": "unknown", "visualization": "text", "importance": "supporting", "flags": ["vague", "overgeneralization"], "review_note": "'외부 연구'(복수)의 근거는 보고서 1건(C18)뿐이다. '비슷한 경향'이 원격 지연(C02)만인지 멘토 페어링 효과(C14)까지인지 모호하다 — C18은 앞의 것만 말한다.", "_score": 110, "_loc": "P16 (29행, §3. 해석)"}, {"id": "C18", "text": "GitLab의 2023 원격 근무 보고서는 원격 신입의 생산성 도달 시간이 더 길다고 밝혔다.", "type": ["fact", "comparison"], "source_text": "GitLab의 2023 원격 근무 보고서는 원격 신입의 생산성 도달 시간이 더 길다고 밝혔다.", "source_location": "P16", "evidence": "source-needed", "confidence": "unknown", "visualization": "text", "importance": "supporting", "entities": ["E08"], "review_note": "보고서 이름만 있고 링크·쪽·수치가 없어 원문 안에서 확인할 수 없다 → source-needed. 외부 확인을 하지 않았다(external_verification=false). 고지문(C01)상 이 인용도 예시일 수 있다. 측정 지표(생산성 도달 시간)가 이 조사의 지표(C07)와 다르다.", "_score": 70, "_loc": "P16 (29행, §3. 해석)"}, {"id": "C19", "text": "본 조사의 표본은 86명으로 작다.", "type": ["opinion", "quantitative"], "source_text": "표본이 86명으로 작고", "source_location": "P18", "evidence": "opinion", "confidence": "unknown", "visualization": "text", "importance": "supporting", "flags": ["compound-split"], "review_note": "P18 첫 문장을 C19·C20으로 나눔. 하위 집단은 19~39명이다.", "_score": 30, "_loc": "P18 (33행, §4. 한계)"}, {"id": "C20", "text": "팀 배정은 무작위가 아니다.", "type": ["fact"], "source_text": "팀 배정이 무작위가 아니다.", "source_location": "P18", "evidence": "model-claim", "confidence": "unknown", "visualization": "diagram", "importance": "core", "flags": ["compound-split"], "review_note": "원문이 스스로 밝힌 한계. 집단 간 차이를 원격 근무·멘토 페어링 효과로 돌릴 수 없게 만든다.", "_score": 45, "_loc": "P18 (33행, §4. 한계)"}, {"id": "C21", "text": "멘토 페어링은 희망한 팀만 운영했다.", "type": ["fact"], "source_text": "멘토 페어링은 희망한 팀만 운영했으므로", "source_location": "P18", "evidence": "model-claim", "confidence": "unknown", "visualization": "diagram", "importance": "core", "flags": ["compound-split"], "review_note": "P18 둘째 문장을 사실(C21)과 유보된 추론(C22)으로 나눔.", "_score": 45, "_loc": "P18 (33행, §4. 한계)"}, {"id": "C22", "text": "멘토 페어링을 운영한 팀은 원래 온보딩에 관심이 많은 팀이었을 가능성이 있다.", "type": ["uncertain"], "source_text": "원래 온보딩에 관심이 많은 팀이었을 가능성이 있다.", "source_location": "P18", "evidence": "uncertain", "confidence": "unknown", "visualization": "diagram", "importance": "core", "risk": "high", "flags": ["compound-split"], "dependencies": ["C21"], "review_note": "자기 선택(선택 편향) 가능성. 사실이면 C10의 짧은 중앙값이 멘토 페어링이 아니라 팀 성향 때문일 수 있다 — C14·C26과 정면으로 맞선다.", "_score": 95, "_loc": "P18 (33행, §4. 한계)"}, {"id": "C23", "text": "팀마다 PR 크기 기준이 다르다.", "type": ["fact"], "source_text": "팀마다 PR 크기 기준이 달라", "source_location": "P19", "evidence": "model-claim", "confidence": "unknown", "visualization": "text", "importance": "supporting", "flags": ["compound-split"], "review_note": "P19 문장을 사실(C23)과 그로부터 끌어낸 판단(C24)으로 나눔.", "_score": 35, "_loc": "P19 (35행, §4. 한계)"}, {"id": "C24", "text": "PR 크기 기준이 달라서 첫 PR 머지 시점을 팀 간에 직접 비교하기 어렵다.", "type": ["causal"], "source_text": "첫 PR 머지 시점은 팀마다 PR 크기 기준이 달라 직접 비교하기 어렵다.", "source_location": "P19", "evidence": "inference", "confidence": "unknown", "visualization": "diagram", "importance": "core", "risk": "high", "dependencies": ["C23"], "review_note": "이 한계는 결과 절의 팀 간 비교(C02·C03·C12) 전체에 걸린다. 그런데 요약·해석·권고는 이 비교를 그대로 결론에 쓴다.", "_score": 105, "_loc": "P19 (35행, §4. 한계)"}, {"id": "C25", "text": "모든 원격 팀은 멘토 페어링을 의무화해야 한다.", "type": ["opinion"], "source_text": "모든 원격 팀에 멘토 페어링을 의무화해야 한다.", "source_location": "P21", "evidence": "opinion", "confidence": "unknown", "visualization": "diagram", "importance": "core", "risk": "high", "flags": ["overgeneralization"], "entities": ["E01"], "review_note": "희망한 팀만 운영한 자료(C21)에서 '모든 원격 팀 의무화'로 넓혔다. 희망하지 않은 팀에 강제했을 때의 효과는 자료에 없다.", "_score": 90, "_loc": "P21 (39행, §5. 권고)"}, {"id": "C26", "text": "멘토 페어링을 의무화하면 원격 팀의 온보딩 기간은 사무실 팀 수준으로 줄어들 것이다.", "type": ["prediction", "conditional", "causal"], "source_text": "이렇게 하면 온보딩 기간이 사무실 팀 수준으로 줄어들 것이다.", "source_location": "P21", "evidence": "inference", "confidence": "unknown", "visualization": "diagram", "importance": "core", "risk": "high", "flags": ["hedge-dropped-in-source", "unsupported"], "dependencies": ["C14", "C03", "C25"], "entities": ["E01", "E02", "E07"], "review_note": "한계 절(C22)은 선택 효과 '가능성'을 유보했는데 권고 절은 효과를 단정적으로 예측한다. 측정값은 대리 지표(C07)인데 예측 대상은 온보딩 기간이다.", "_score": 145, "_loc": "P21 (39행, §5. 권고)"}], "entities": [{"id": "E01", "name": "원격 팀", "aliases": ["원격 근무 팀"], "claims": ["C02", "C05", "C11", "C12", "C25", "C26"]}, {"id": "E02", "name": "사무실 팀", "aliases": ["사무실 근무 팀"], "claims": ["C02", "C03", "C06", "C08", "C12", "C26"]}, {"id": "E03", "name": "멘토 페어링 원격 팀", "aliases": ["원격 팀(멘토 페어링 있음)", "멘토 페어링을 운영한 원격 팀"], "claims": ["C03", "C10"]}, {"id": "E04", "name": "멘토 페어링 없는 원격 팀", "aliases": ["원격 팀(멘토 페어링 없음)"], "claims": ["C09"]}, {"id": "E05", "name": "신입 개발자", "claims": ["C02", "C04", "C13", "C15"]}, {"id": "E06", "name": "첫 PR 머지까지 걸린 영업일 수", "claims": ["C02", "C07", "C08", "C09", "C10", "C11"]}, {"id": "E07", "name": "온보딩 기간", "claims": ["C07", "C14", "C26"]}, {"id": "E08", "name": "GitLab의 2023 원격 근무 보고서", "claims": ["C18"]}], "inferences": [{"id": "I01", "label": "INFERENCE", "text": "저자의 해석(C14·C16)은 결과 절의 집단별 중앙값(C08~C10)과 리뷰 코멘트 수(C13)에 근거한 것으로 보인다.", "based_on": ["C08", "C09", "C10", "C13", "C14", "C16"], "reason": "원문 해석 절은 결과 절의 어느 수치를 근거로 쓰는지 지목하지 않는다. 결론→근거 사슬을 보이려면 이 연결이 필요하다."}, {"id": "I02", "label": "INFERENCE", "text": "권고(C25)는 해석(C14)에 기대고 있는 것으로 보인다.", "based_on": ["C14", "C25"], "reason": "원문 권고 절은 근거를 지목하지 않는다. 권고가 무엇에 기대는지 보여야 한계의 영향 범위를 판단할 수 있다."}, {"id": "I03", "label": "INTERPRETATION", "text": "원문 한계(C20·C21·C22·C24)는 해석 C14의 인과 주장과 결과 절의 팀 간 비교를 약화시킨다.", "based_on": ["C14", "C20", "C21", "C22", "C24"], "reason": "원문은 한계를 나열하지만 그것이 해석·권고에 어떤 영향을 주는지 말하지 않는다. 인과 과잉 주장을 검토하려면 이 연결을 보여야 한다."}], "visuals": [{"id": "V01", "kind": "table", "title": "집단별 첫 PR 머지까지 중앙값 (원문 결과 표 + 본문)", "columns": ["집단", "인원(명)", "첫 PR 머지 중앙값(영업일)", "원문 위치"], "rows": [{"cells": ["사무실 팀", "39", "6", "결과 표 P09"], "claims": ["C08", "C06"]}, {"cells": ["원격 팀(멘토 페어링 없음)", "28", "11", "결과 표 P10"], "claims": ["C09"]}, {"cells": ["원격 팀(멘토 페어링 있음)", "19", "7", "결과 표 P11"], "claims": ["C10"]}, {"cells": ["원격 팀 전체", "47", "9", "방법 P06 · 본문 P12"], "claims": ["C05", "C11"]}], "_mermaid": null, "_svg": null}, {"id": "V02", "kind": "diagram", "title": "결론 → 근거 사슬과 한계가 걸리는 지점", "direction": "LR", "nodes": [{"id": "D1", "label": "첫 PR 머지까지 중앙값 (집단별)", "group": "결과", "claims": ["C08", "C09", "C10"]}, {"id": "D2", "label": "리뷰 코멘트 2.4배", "group": "결과", "claims": ["C13"]}, {"id": "I1", "label": "멘토 페어링이 온보딩 지연을 해소한다", "group": "해석", "claims": ["C14"]}, {"id": "I2", "label": "리뷰 코멘트가 관습 습득을 빠르게 함(추정)", "group": "해석", "claims": ["C15", "C16"]}, {"id": "R1", "label": "모든 원격 팀 멘토 페어링 의무화", "group": "권고", "claims": ["C25"]}, {"id": "R2", "label": "온보딩 기간이 사무실 팀 수준으로 줄어듦(예측)", "group": "권고", "claims": ["C26"]}, {"id": "L1", "label": "희망한 팀만 멘토 페어링 운영 · 자기 선택 가능성", "group": "한계", "claims": ["C21", "C22"]}, {"id": "L2", "label": "PR 크기 기준이 달라 직접 비교하기 어렵다", "group": "한계", "claims": ["C23", "C24"]}, {"id": "L3", "label": "표본 86명 · 무작위 아닌 팀 배정", "group": "한계", "claims": ["C19", "C20"]}], "edges": [{"from": "D1", "to": "I1", "kind": "association", "label": "해석의 근거", "inferred": true, "inference": "I01"}, {"from": "D2", "to": "I2", "kind": "association", "label": "해석의 근거", "inferred": true, "inference": "I01"}, {"from": "I2", "to": "I1", "kind": "causal", "label": "이유로 보임", "claims": ["C16"]}, {"from": "I1", "to": "R1", "kind": "association", "label": "권고의 근거", "inferred": true, "inference": "I02"}, {"from": "R1", "to": "R2", "kind": "conditional", "label": "의무화하면", "claims": ["C26"]}, {"from": "L1", "to": "I1", "kind": "association", "label": "인과 해석 약화", "inferred": true, "inference": "I03"}, {"from": "L3", "to": "I1", "kind": "association", "label": "인과 해석 약화", "inferred": true, "inference": "I03"}, {"from": "L2", "to": "D1", "kind": "association", "label": "팀 간 비교 약화", "inferred": true, "inference": "I03"}], "_mermaid": "flowchart LR\n  n_D1[\"첫 PR 머지까지 중앙값 (집단별)<br/><small>C08 C09 C10<\/small>\"]\n  n_D2[\"리뷰 코멘트 2.4배<br/><small>C13<\/small>\"]\n  n_I1[\"멘토 페어링이 온보딩 지연을 해소한다<br/><small>C14<\/small>\"]\n  n_I2[\"리뷰 코멘트가 관습 습득을 빠르게 함(추정)<br/><small>C15 C16<\/small>\"]\n  n_R1[\"모든 원격 팀 멘토 페어링 의무화<br/><small>C25<\/small>\"]\n  n_R2[\"온보딩 기간이 사무실 팀 수준으로 줄어듦(예측)<br/><small>C26<\/small>\"]\n  n_L1[\"희망한 팀만 멘토 페어링 운영 · 자기 선택 가능성<br/><small>C21 C22<\/small>\"]\n  n_L2[\"PR 크기 기준이 달라 직접 비교하기 어렵다<br/><small>C23 C24<\/small>\"]\n  n_L3[\"표본 86명 · 무작위 아닌 팀 배정<br/><small>C19 C20<\/small>\"]\n  n_D1 -.->|\"INFERENCE · 해석의 근거 · I01\"| n_I1\n  n_D2 -.->|\"INFERENCE · 해석의 근거 · I01\"| n_I2\n  n_I2 ==>|\"이유로 보임 · C16\"| n_I1\n  n_I1 -.->|\"INFERENCE · 권고의 근거 · I02\"| n_R1\n  n_R1 -->|\"의무화하면 · C26\"| n_R2\n  n_L1 -.->|\"INTERPRETATION · 인과 해석 약화 · I03\"| n_I1\n  n_L3 -.->|\"INTERPRETATION · 인과 해석 약화 · I03\"| n_I1\n  n_L2 -.->|\"INTERPRETATION · 팀 간 비교 약화 · I03\"| n_D1\n  classDef ev_supported fill:#e7f5ec,stroke:#2f855a\n  class n_D1,n_D2 ev_supported\n  classDef ev_inference fill:#fff4e6,stroke:#d9480f,stroke-dasharray:4 3\n  class n_I1,n_R2,n_L2 ev_inference\n  classDef ev_uncertain fill:#fff9db,stroke:#e67700,stroke-dasharray:4 3\n  class n_I2,n_L1 ev_uncertain\n  classDef ev_opinion fill:#f3f0ff,stroke:#7048e8\n  class n_R1 ev_opinion\n  classDef ev_model_claim fill:#f1f3f5,stroke:#868e96\n  class n_L3 ev_model_claim", "_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 900 900\" role=\"img\" aria-label=\"결론 → 근거 사슬과 한계가 걸리는 지점\"><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#555\"/><\/marker><\/defs><line x1=\"695.721239031346\" y1=\"484.471999940354\" x2=\"568.1096960454024\" y2=\"720.8184034934304\" stroke=\"#555\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\" marker-end=\"url(#arrow)\"><title>해석의 근거 · INFERENCE I01<\/title><\/line><text x=\"631.9154675383743\" y=\"602.6452017168922\" font-size=\"11\" fill=\"#333\" stroke=\"white\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\">해석의 근거 · INFERENCE I01<\/text><line x1=\"588.9930020656623\" y1=\"657.0783269978391\" x2=\"393.4807753012209\" y2=\"710.6537071781642\" stroke=\"#555\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\" marker-end=\"url(#arrow)\"><title>해석의 근거 · INFERENCE I01<\/title><\/line><text x=\"491.23688868344163\" y=\"683.8660170880016\" font-size=\"11\" fill=\"#333\" stroke=\"white\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\">해석의 근거 · INFERENCE I01<\/text><line x1=\"393.4807753012209\" y1=\"726.2820431681879\" x2=\"405.35015977552763\" y2=\"747.4762354387726\" stroke=\"#555\" stroke-width=\"3\" marker-end=\"url(#arrow)\"><title>이유로 보임 · C16<\/title><\/line><text x=\"399.4154675383743\" y=\"736.8791393034803\" font-size=\"11\" fill=\"#333\" stroke=\"white\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\">이유로 보임 · C16<\/text><line x1=\"417.2283946983046\" y1=\"732.7904034337845\" x2=\"245.2978279348123\" y2=\"578.5262444309574\" stroke=\"#555\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\" marker-end=\"url(#arrow)\"><title>권고의 근거 · INFERENCE I02<\/title><\/line><text x=\"331.2631113165585\" y=\"655.6583239323709\" font-size=\"11\" fill=\"#333\" stroke=\"white\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\">권고의 근거 · INFERENCE I02<\/text><line x1=\"158.6952875563684\" y1=\"511.0262444309574\" x2=\"158.6952875563684\" y2=\"388.97375556904274\" stroke=\"#555\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"><title>의무화하면 · C26<\/title><\/line><text x=\"158.6952875563684\" y=\"450.00000000000006\" font-size=\"11\" fill=\"#333\" stroke=\"white\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\">의무화하면 · C26<\/text><line x1=\"329.20201433256676\" y1=\"223.81829276218997\" x2=\"469.6289207441816\" y2=\"713.0042354984187\" stroke=\"#555\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\" marker-end=\"url(#arrow)\"><title>인과 해석 약화 · INFERENCE I03<\/title><\/line><text x=\"399.4154675383742\" y=\"468.4112641303043\" font-size=\"11\" fill=\"#333\" stroke=\"white\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\">인과 해석 약화 · INFERENCE I03<\/text><line x1=\"653.2717630343163\" y1=\"293.0220089325386\" x2=\"538.0329494093153\" y2=\"713.0042354984187\" stroke=\"#555\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\" marker-end=\"url(#arrow)\"><title>인과 해석 약화 · INFERENCE I03<\/title><\/line><text x=\"595.6523562218158\" y=\"503.0131222154786\" font-size=\"11\" fill=\"#333\" stroke=\"white\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\">인과 해석 약화 · INFERENCE I03<\/text><line x1=\"568.1096960454022\" y1=\"179.18159650656946\" x2=\"695.721239031346\" y2=\"415.528000059646\" stroke=\"#555\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\" marker-end=\"url(#arrow)\"><title>팀 간 비교 약화 · INFERENCE I03<\/title><\/line><text x=\"631.9154675383742\" y=\"297.3547982831077\" font-size=\"11\" fill=\"#333\" stroke=\"white\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\">팀 간 비교 약화 · INFERENCE I03<\/text><g class=\"node\" data-node-id=\"D1\" style=\"cursor:pointer\"><rect x=\"650.0\" y=\"405.0\" width=\"220\" height=\"90\" rx=\"8\" fill=\"#e7f5ec\" stroke=\"#777\"/><text x=\"760.0\" y=\"432.0\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">첫 PR 머지까지 중앙값 (집단별)<\/text><text x=\"760.0\" y=\"477.0\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">C08 C09 C10<\/text><\/g><g class=\"node\" data-node-id=\"D2\" style=\"cursor:pointer\"><rect x=\"577.4737773668832\" y=\"604.2641590028272\" width=\"220\" height=\"90\" rx=\"8\" fill=\"#e7f5ec\" stroke=\"#777\"/><text x=\"687.4737773668832\" y=\"631.2641590028272\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">리뷰 코멘트 2.4배<\/text><text x=\"687.4737773668832\" y=\"676.2641590028272\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">C13<\/text><\/g><g class=\"node\" data-node-id=\"I1\" style=\"cursor:pointer\"><rect x=\"393.83093507674846\" y=\"710.2904034337845\" width=\"220\" height=\"90\" rx=\"8\" fill=\"#fff4e6\" stroke=\"#777\"/><text x=\"503.83093507674846\" y=\"737.2904034337845\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">멘토 페어링이 온보딩 지연을 해소한다<\/text><text x=\"503.83093507674846\" y=\"782.2904034337845\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">C14<\/text><\/g><g class=\"node\" data-node-id=\"I2\" style=\"cursor:pointer\"><rect x=\"185.00000000000006\" y=\"673.467875173176\" width=\"220\" height=\"90\" rx=\"8\" fill=\"#fff9db\" stroke=\"#777\"/><text x=\"295.00000000000006\" y=\"700.467875173176\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">리뷰 코멘트가 관습 습득을 빠르게<\/text><text x=\"295.00000000000006\" y=\"719.467875173176\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">함(추정)<\/text><text x=\"295.00000000000006\" y=\"745.467875173176\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">C15 C16<\/text><\/g><g class=\"node\" data-node-id=\"R1\" style=\"cursor:pointer\"><rect x=\"48.69528755636844\" y=\"511.0262444309574\" width=\"220\" height=\"90\" rx=\"8\" fill=\"#f3f0ff\" stroke=\"#777\"/><text x=\"158.69528755636844\" y=\"538.0262444309574\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">모든 원격 팀 멘토 페어링 의무화<\/text><text x=\"158.69528755636844\" y=\"583.0262444309574\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">C25<\/text><\/g><g class=\"node\" data-node-id=\"R2\" style=\"cursor:pointer\"><rect x=\"48.695287556368385\" y=\"298.97375556904274\" width=\"220\" height=\"90\" rx=\"8\" fill=\"#fff4e6\" stroke=\"#777\"/><text x=\"158.69528755636838\" y=\"325.97375556904274\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">온보딩 기간이 사무실 팀 수준으로<\/text><text x=\"158.69528755636838\" y=\"344.97375556904274\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">줄어듦(예측)<\/text><text x=\"158.69528755636838\" y=\"370.97375556904274\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">C26<\/text><\/g><g class=\"node\" data-node-id=\"L1\" style=\"cursor:pointer\"><rect x=\"184.9999999999999\" y=\"136.5321248268241\" width=\"220\" height=\"90\" rx=\"8\" fill=\"#fff9db\" stroke=\"#777\"/><text x=\"294.9999999999999\" y=\"163.5321248268241\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">희망한 팀만 멘토 페어링 운영 ·<\/text><text x=\"294.9999999999999\" y=\"182.5321248268241\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">자기 선택 가능성<\/text><text x=\"294.9999999999999\" y=\"208.5321248268241\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">C21 C22<\/text><\/g><g class=\"node\" data-node-id=\"L2\" style=\"cursor:pointer\"><rect x=\"393.8309350767483\" y=\"99.70959656621545\" width=\"220\" height=\"90\" rx=\"8\" fill=\"#fff4e6\" stroke=\"#777\"/><text x=\"503.8309350767483\" y=\"126.70959656621545\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">PR 크기 기준이 달라 직접 비교하기<\/text><text x=\"503.8309350767483\" y=\"145.70959656621545\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">어렵다<\/text><text x=\"503.8309350767483\" y=\"171.70959656621545\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">C23 C24<\/text><\/g><g class=\"node\" data-node-id=\"L3\" style=\"cursor:pointer\"><rect x=\"577.4737773668832\" y=\"205.73584099717272\" width=\"220\" height=\"90\" rx=\"8\" fill=\"#f1f3f5\" stroke=\"#777\"/><text x=\"687.4737773668832\" y=\"232.73584099717272\" text-anchor=\"middle\" font-size=\"14\" fill=\"#222\">표본 86명 · 무작위 아닌 팀 배정<\/text><text x=\"687.4737773668832\" y=\"277.7358409971727\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">C19 C20<\/text><\/g><\/svg>"}], "summary": [{"id": "S01", "text": "원격 팀 신입 개발자의 첫 PR 머지까지 중앙값은 9영업일로, 사무실 팀(6영업일)보다 3영업일 길었다.", "claims": ["C11", "C08", "C12"], "_weakest": "supported", "_low": true}, {"id": "S02", "text": "멘토 페어링 원격 팀의 중앙값은 7영업일, 멘토 페어링 없는 원격 팀은 11영업일이었다. 원문은 멘토 페어링 원격 팀과 사무실 팀의 차이가 거의 없었다고 요약한다.", "claims": ["C10", "C09", "C03"], "_weakest": "supported", "_low": true}, {"id": "S03", "text": "저자는 멘토 페어링이 원격 근무의 온보딩 지연을 해소한다고 해석했고, 그 이유를 리뷰 코멘트로 관습을 빨리 익히는 효과로 추정했다.", "claims": ["C14", "C15", "C16"], "_weakest": "uncertain", "_low": false}, {"id": "S04", "text": "원문 한계 절은 표본이 작고 팀 배정이 무작위가 아니며, 멘토 페어링 팀이 원래 온보딩에 관심이 많았을 가능성과 팀 간 직접 비교가 어렵다는 점을 밝힌다.", "claims": ["C19", "C20", "C22", "C24"], "_weakest": "uncertain", "_low": false}, {"id": "S05", "text": "저자는 모든 원격 팀에 멘토 페어링 의무화를 권고하고, 그러면 온보딩 기간이 사무실 팀 수준으로 줄어들 것이라고 예측한다.", "claims": ["C25", "C26"], "_weakest": "inference", "_low": false}], "review": [{"id": "C14", "reason": "원문 속 추론 · 근거 없는 인과 · 근거 없는 강한 단정 · 사실·추론 혼합 · 위험 높음"}, {"id": "C26", "reason": "원문 속 추론 · 근거 없는 인과 · 원문 안에서 유보→단정 · 근거 없는 강한 단정 · 위험 높음"}, {"id": "C17", "reason": "출처 확인 필요 · 모호한 표현 · 지나친 일반화"}, {"id": "C24", "reason": "원문 속 추론 · 근거 없는 인과 · 위험 높음"}, {"id": "C22", "reason": "불확실 · 위험 높음"}, {"id": "C25", "reason": "의견·평가 · 지나친 일반화 · 위험 높음"}, {"id": "C03", "reason": "출처·데이터 제시됨 · 모호한 표현 · 위험 높음"}, {"id": "C18", "reason": "출처 확인 필요"}, {"id": "C13", "reason": "출처·데이터 제시됨 · 숫자 기준 불명확 · 이름 불일치"}, {"id": "C15", "reason": "불확실 · 근거 없는 인과"}, {"id": "C16", "reason": "불확실 · 근거 없는 인과"}, {"id": "C02", "reason": "출처·데이터 제시됨 · 조건 누락"}], "narrative": {"headline": {"text": "이 사내 조사 보고서는 원격 팀 신입 개발자가 사무실 팀보다 첫 PR 머지까지 더 오래 걸렸지만, 멘토 페어링을 운영한 원격 팀에서는 그 차이가 거의 없었다고 보고한다. 작성자는 모든 원격 팀에 멘토 페어링을 의무화해야 한다고 권고한다.", "claims": ["C02", "C03", "C25"], "_weakest": "opinion", "_low": true}, "sections": [{"id": "N01", "title": "무엇을, 어떻게 조사했나", "blocks": [{"kind": "text", "sentences": [{"text": "보고서는 스스로 가상의 회사 데이터를 쓴 예시 문서이며, 수치는 실제 통계가 아니라고 밝힌다.", "claims": ["C01"], "_weakest": "model-claim", "_low": false}, {"text": "조사는 2024년 3월부터 2025년 2월까지 입사한 신입 개발자 86명의 저장소 기록을 분석했다.", "claims": ["C04"], "_weakest": "model-claim", "_low": false}, {"text": "이 가운데 원격 팀 소속이 47명, 사무실 팀 소속이 39명이다.", "claims": ["C05", "C06"], "_weakest": "model-claim", "_low": false}, {"text": "온보딩 기간을 나타내는 대리 지표로는 첫 PR 머지까지 걸린 영업일 수를 썼다.", "claims": ["C07"], "_weakest": "model-claim", "_low": false}, {"text": "PR(풀 리퀘스트)은 개발자가 만든 코드 변경을 공용 저장소에 합쳐 달라고 요청하는 단위이고, 머지는 그 변경이 실제로 합쳐지는 것을 뜻한다.", "context": ["K01"], "_weakest": null, "_low": false}, {"text": "대리 지표란 직접 재기 어려운 대상을 대신해 재는, 그 대상과 관련된 다른 값을 말한다.", "context": ["K02"], "_weakest": null, "_low": false}]}]}, {"id": "N02", "title": "원격 팀은 얼마나 더 오래 걸렸나", "blocks": [{"kind": "text", "sentences": [{"text": "보고서의 핵심 결과는 원격 팀 신입 개발자가 사무실 팀보다 첫 PR 머지까지 더 오래 걸렸다는 것이다.", "claims": ["C02"], "_weakest": "supported", "_low": true}, {"text": "중앙값으로 보면 사무실 팀은 6영업일, 원격 팀 전체는 9영업일로, 원격 팀이 3영업일 길었다.", "claims": ["C08", "C11", "C12"], "_weakest": "supported", "_low": true}, {"text": "중앙값은 값을 크기 순서로 늘어놓았을 때 한가운데에 오는 값으로, 극단적인 값의 영향을 덜 받는다.", "context": ["K03"], "_weakest": null, "_low": false}, {"text": "원격 팀을 멘토 페어링 여부로 나누면 멘토 페어링 없는 원격 팀은 11영업일, 멘토 페어링 원격 팀은 7영업일이었다.", "claims": ["C09", "C10"], "_weakest": "supported", "_low": false}, {"text": "보고서는 멘토 페어링 원격 팀과 사무실 팀 사이에는 차이가 거의 없었다고 요약한다.", "claims": ["C03"], "_weakest": "supported", "_low": true}, {"text": "멘토 페어링은 흔히 신입을 경험 있는 동료(멘토)와 짝지어 함께 일하게 하는 방식을 가리킨다.", "context": ["K04"], "_weakest": null, "_low": false}]}, {"kind": "visual", "ref": "V01", "caption": "보고서가 제시한 집단별 인원과 첫 PR 머지까지 중앙값"}, {"kind": "text", "sentences": [{"text": "또 멘토 페어링 팀의 신입 개발자는 첫 달에 코드 리뷰 코멘트를 평균 2.4배 더 많이 받았다고 보고서는 적는다(리뷰 시스템 로그 기준).", "claims": ["C13"], "_weakest": "supported", "_low": true}]}]}, {"id": "N03", "title": "작성자는 이 결과를 어떻게 해석하나", "blocks": [{"kind": "text", "sentences": [{"text": "작성자는 멘토 페어링이 원격 근무의 온보딩 지연을 해소한다고 해석한다.", "claims": ["C14"], "_weakest": "inference", "_low": false}, {"text": "그 이유는 리뷰 코멘트가 많을수록 신입 개발자가 코드베이스의 관습을 빨리 익히기 때문으로 보인다고 추정한다.", "claims": ["C15", "C16"], "_weakest": "uncertain", "_low": false}, {"text": "작성자는 외부 연구도 비슷한 경향을 보고한다고 덧붙인다.", "claims": ["C17"], "_weakest": "source-needed", "_low": false}, {"text": "예로 드는 것은 GitLab의 2023 원격 근무 보고서로, 이 보고서가 원격 신입의 생산성 도달 시간이 더 길다고 밝혔다는 것이다.", "claims": ["C18"], "_weakest": "source-needed", "_low": false}, {"text": "GitLab은 코드 저장소와 개발 협업 도구를 제공하는 소프트웨어 회사다.", "context": ["K05"], "_weakest": null, "_low": false}]}]}, {"id": "N04", "title": "보고서가 스스로 밝힌 한계", "blocks": [{"kind": "points", "sentences": [{"text": "작성자는 표본이 86명으로 작다고 적는다.", "claims": ["C19"], "_weakest": "opinion", "_low": false}, {"text": "팀 배정은 무작위가 아니었다.", "claims": ["C20"], "_weakest": "model-claim", "_low": false}, {"text": "멘토 페어링은 희망한 팀만 운영했다. 작성자는 그 팀들이 원래 온보딩에 관심이 많은 팀이었을 가능성이 있다고 적는다.", "claims": ["C21", "C22"], "_weakest": "uncertain", "_low": false}, {"text": "보고서는 팀마다 PR 크기 기준이 달라서 첫 PR 머지 시점을 팀 간에 직접 비교하기 어렵다고 적는다.", "claims": ["C23", "C24"], "_weakest": "inference", "_low": false}]}]}, {"id": "N05", "title": "작성자는 무엇을 하자고 하나", "blocks": [{"kind": "text", "sentences": [{"text": "작성자는 모든 원격 팀에 멘토 페어링을 의무화해야 한다고 권고한다.", "claims": ["C25"], "_weakest": "opinion", "_low": false}, {"text": "그렇게 하면 원격 팀의 온보딩 기간이 사무실 팀 수준으로 줄어들 것이라고 작성자는 예측한다.", "claims": ["C26"], "_weakest": "inference", "_low": false}]}, {"kind": "visual", "ref": "V02", "caption": "결과에서 해석·권고로 이어지는 흐름과 원문 한계가 걸리는 지점 (점선은 원문에 없는 연결)"}]}]}, "context": [{"id": "K01", "term": "PR · 머지", "text": "PR(풀 리퀘스트)은 개발자가 만든 코드 변경을 공용 저장소에 합쳐 달라고 요청하는 단위이고, 머지는 그 변경이 실제로 합쳐지는 것이다.", "reason": "원문은 지표 이름에 PR 머지를 설명 없이 쓴다."}, {"id": "K02", "term": "대리 지표", "text": "직접 재기 어려운 대상을 대신해 재는, 그 대상과 관련된 다른 값.", "reason": "원문은 온보딩 기간을 직접 재지 않고 대리 지표를 쓴다고만 말한다."}, {"id": "K03", "term": "중앙값", "text": "값을 크기 순서로 늘어놓았을 때 한가운데에 오는 값. 평균보다 극단적인 값의 영향을 덜 받는다.", "reason": "결과가 모두 중앙값으로 제시된다."}, {"id": "K04", "term": "멘토 페어링", "text": "흔히 신입을 경험 있는 동료(멘토)와 짝지어 함께 일하게 하는 방식을 가리킨다.", "reason": "원문은 멘토 페어링이 무엇인지 설명하지 않는다."}, {"id": "K05", "term": "GitLab", "text": "코드 저장소와 개발 협업 도구를 제공하는 소프트웨어 회사.", "reason": "원문은 외부 근거로 GitLab 보고서를 들지만 GitLab이 무엇인지 말하지 않는다."}], "skipped": [{"unit": "P08", "reason": "결과 표 머리글 — 열 이름(집단·인원·중앙값(영업일))만 있다. 단위는 C08~C10 문장에 반영"}], "validation": {"scope": "구조·참조 검사 통과. 의미 정확성・주장 누락・외부 사실의 참 여부를 보장하지 않음.", "semantic": {"source_to_claim": "not-reviewed", "claim_to_narrative": "not-reviewed", "coverage": "not-reviewed", "reader_flow": "not-reviewed"}, "review_origin": "작성자가 기록한 검토 상태이며 자동 의미 검증 결과가 아님", "external": {"status": "not-performed", "note": "외부 확인 기록의 형식만 검사하며 실제 조회 수행·출처의 진위는 보장하지 않음"}}, "explanation_plan": null, "gates": {"G1": "PASS", "G2": "PASS", "G3": "PASS", "G4": "PASS", "G5": "PASS", "G6": "PASS"}, "warnings": [{"level": "warning", "gate": "G1", "where": "explanation_plan", "msg": "독자 중심 설명 기획이 없다. 기존 IR 호환을 위해 경고로 표시한다"}, {"level": "warning", "gate": "G3", "where": "C13", "msg": "review_note 에 원문에 없는 숫자 ['3.4'] — 계산한 값이면 계산식을 함께 적는다"}], "labels": {"evidence": {"verified": "외부 확인됨", "supported": "출처·데이터 제시됨", "source-needed": "출처 확인 필요", "model-claim": "작성자 단언", "inference": "원문 속 추론", "opinion": "의견·평가", "uncertain": "불확실", "conflicting": "충돌"}, "flags": {"unsupported": "근거 없는 강한 단정", "overgeneralization": "지나친 일반화", "vague": "모호한 표현", "fact-inference-mix": "사실·추론 혼합", "naming-drift": "이름 불일치", "missing-condition": "조건 누락", "number-unclear": "숫자 기준 불명확", "hedge-dropped-in-source": "원문 안에서 유보→단정", "compound-split": "복합 문장 분해", "outdated-risk": "시점 민감", "overclaim": "근거보다 강한 결론"}}};
+</script>
+<script>
+(function(){
+  "use strict";
+  const $ = (s, el=document) => el.querySelector(s);
+  const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const EVL = DATA.labels.evidence, FLL = DATA.labels.flags;
+  const C = Object.fromEntries(DATA.claims.map(c => [c.id, c]));
+  const INF = Object.fromEntries(DATA.inferences.map(i => [i.id, i]));
+  const visualsOf = {};
+  DATA.visuals.forEach(v => {
+    const add = ids => (ids||[]).forEach(id => (visualsOf[id] = visualsOf[id] || new Set()).add(v.id));
+    (v.nodes||[]).forEach(n => add(n.claims));
+    (v.edges||[]).forEach(e => add(e.claims));
+    (v.steps||[]).forEach(s => add(s.claims));
+    (v.rows||[]).forEach(r => add(r.claims));
+    (v.scenes||[]).forEach(s => add(s.claims));
+  });
+
+  // ---------- theme
+  try { const t = localStorage.getItem("uc-theme"); if (t) document.documentElement.dataset.theme = t; } catch(e){}
+  $("#themebtn").onclick = () => {
+    const cur = document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const next = cur === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("uc-theme", next); } catch(e){}
+  };
+
+  // ---------- header
+  const m = DATA.meta;
+  $("#title").textContent = m.title;
+  $("#meta").textContent = `원문 ${m.source_path} · 모드 ${m.mode} · ${m.created || ""} · 외부 검증 ${m.external_verification ? "기록 있음 (실제 수행은 자동 검증 안 함)" : "수행하지 않음 (confidence 기본값 unknown)"}`;
+  const gateName = {G1:"Claim ID",G2:"시각요소↔Claim",G3:"인용·숫자·관계 유형 검사",G4:"Fact/Inference",G5:"불확실성",G6:"원문 복귀"};
+  $("#gates").innerHTML = Object.entries(DATA.gates).map(([g,v]) => `<span class="gate ${v}" title="${esc(gateName[g])}">${g} ${v}</span>`).join("");
+
+  const notice = document.createElement("p");
+  notice.className = "sm";
+  notice.textContent = DATA.validation.scope + " 검토 상태: " + Object.entries(DATA.validation.semantic).map(([stage,status]) => stage + "=" + status).join(" · ") + "。" + DATA.validation.review_origin + "。" + DATA.validation.external.note;
+  $("#gates").after(notice);
+  if (DATA.explanation_plan) {
+    const plan = document.createElement("p");
+    plan.className = "sm";
+    plan.textContent = "독자: " + DATA.explanation_plan.audience + " · 목적: " + DATA.explanation_plan.goal + " · 시작 질문: " + DATA.explanation_plan.opening_question;
+    notice.after(plan);
+  }
+  const k = DATA.counts;
+  const stats = [
+    ["총 Claim", k.total, "", null],
+    ["근거 제시됨", k.grounded, "ok", ["verified","supported"]],
+    ["출처 확인 필요", k.source_needed, "bad", ["source-needed"]],
+    ["작성자 단언", k.model_claim, "", ["model-claim"]],
+    ["Inference", k.inference, "warn", ["inference"]],
+    ["불확실", k.uncertain, "warn", ["uncertain"]],
+    ["충돌 가능성", k.conflicting, "bad", ["conflicting"]],
+  ];
+  $("#stats").innerHTML = stats.map((s,i) => `<button class="stat ${s[2]}" data-i="${i}" type="button"><div class="n">${s[1]}</div><div class="l">${esc(s[0])}</div></button>`).join("");
+  $$("#stats .stat").forEach(b => b.onclick = () => { const s = stats[+b.dataset.i]; setState({ev: s[3] ? new Set(s[3]) : new Set(), quick:null, ids:null}); showTab("claims"); });
+
+  $("#review").innerHTML = DATA.review.length ? DATA.review.map(r => `
+    <div class="review-item" data-id="${r.id}"><span class="rid">${r.id}</span><span class="rr">${esc(r.reason)}</span><span class="rt">${esc(C[r.id].text)}</span></div>`).join("")
+    : `<p class="sm">우선 검토 기준(점수 50)을 넘는 Claim이 없다.</p>`;
+  $$("#review .review-item").forEach(el => el.onclick = () => openClaim(el.dataset.id));
+
+  $("#summary").innerHTML = DATA.summary.length ? DATA.summary.map(s => `
+    <li>${esc(s.text)} ${s.claims.map(cref).join(" ")} <span class="badge ${s._weakest}">${esc(EVL[s._weakest]||"")}${s._low ? " · 근거 약함" : ""}</span></li>`).join("")
+    : `<li class="sm">요약 없음</li>`;
+
+  function cref(id){ return `<span class="cref" data-cref="${esc(id)}" style="font:600 12px var(--mono);color:var(--accent);cursor:pointer">${esc(id)}</span>`; }
+  document.addEventListener("click", e => {
+    const t = e.target.closest("[data-cref]"); if (!t) return;
+    if (t.closest("#mode-read") || t.closest("#drawer")) openDrawer([t.dataset.cref], [], "근거");
+    else openClaim(t.dataset.cref);
+  });
+
+  // ---------- tabs
+  function showTab(name){
+    $$(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.tab === name ? "true" : "false"));
+    $$(".pane").forEach(p => p.classList.toggle("on", p.id === "pane-" + name));
+    if (name === "struct") setTimeout(renderDiagrams, 0);
+  }
+  $$(".tab").forEach(t => t.onclick = () => showTab(t.dataset.tab));
+
+  // ---------- claims filter
+  const types = Object.keys(k.by_type);
+  $("#ftype").innerHTML += types.map(t => `<option value="${t}">${t} (${k.by_type[t]})</option>`).join("");
+  const evs = Object.keys(EVL).filter(e => k.by_evidence[e]);
+  $("#evchips").innerHTML = evs.map(e => `<button class="chip" data-ev="${e}" aria-pressed="false">${esc(EVL[e])} · ${k.by_evidence[e]}</button>`).join("");
+
+  const state = {q:"", type:"", ev:new Set(), quick:null, ids:null, idsLabel:""};
+  function setState(p){ Object.assign(state, p); syncControls(); renderCards(); }
+  function syncControls(){
+    $("#q").value = state.q; $("#ftype").value = state.type;
+    $$("#evchips .chip").forEach(c => c.setAttribute("aria-pressed", state.ev.has(c.dataset.ev) ? "true" : "false"));
+    $$("[data-quick]").forEach(c => c.setAttribute("aria-pressed", state.quick === c.dataset.quick ? "true" : "false"));
+    const fn = $("#filternote");
+    if (state.ids){ fn.style.display = "block"; fn.innerHTML = `${esc(state.idsLabel)} — Claim ${state.ids.size}개만 표시 <button type="button" id="clearids">× 해제</button>`; $("#clearids").onclick = () => setState({ids:null}); }
+    else fn.style.display = "none";
+  }
+  $("#q").oninput = e => setState({q:e.target.value});
+  $("#ftype").onchange = e => setState({type:e.target.value});
+  $$("#evchips .chip").forEach(c => c.onclick = () => { const s = new Set(state.ev); s.has(c.dataset.ev) ? s.delete(c.dataset.ev) : s.add(c.dataset.ev); setState({ev:s}); });
+  $$("[data-quick]").forEach(c => c.onclick = () => {
+    const q = c.dataset.quick;
+    if (q === "reset") return setState({q:"", type:"", ev:new Set(), quick:null, ids:null});
+    if (q === "source-needed" || q === "uncertain") return setState({ev:new Set([q]), quick:q});
+    setState({quick: state.quick === q ? null : q});
+  });
+
+  function match(c){
+    if (state.ids && !state.ids.has(c.id)) return false;
+    if (state.type && !(c.type||[]).includes(state.type)) return false;
+    if (state.ev.size && !state.ev.has(c.evidence)) return false;
+    if (state.quick === "review" && c._score < 50) return false;
+    if (state.quick === "flagged" && !(c.flags||[]).some(f => f !== "compound-split")) return false;
+    if (state.quick === "core" && c.importance !== "core") return false;
+    if (state.q){
+      const q = state.q.toLowerCase();
+      if (![c.id, c.text, c.source_text, c.review_note, (c.type||[]).join(" ")].join(" ").toLowerCase().includes(q)) return false;
+    }
+    return true;
+  }
+
+  function cardHTML(c){
+    const flags = (c.flags||[]).map(f => `<span class="badge">${esc(FLL[f]||f)}</span>`).join(" ");
+    const kv = [];
+    if (c.conditions && c.conditions.length) kv.push(`<b>조건</b> ${esc(c.conditions.join("; "))}`);
+    if (c.exceptions && c.exceptions.length) kv.push(`<b>예외</b> ${esc(c.exceptions.join("; "))}`);
+    if (c.dependencies && c.dependencies.length) kv.push(`<b>전제</b> ${c.dependencies.map(cref).join(" ")}`);
+    if (c.conflicts_with && c.conflicts_with.length) kv.push(`<b>충돌</b> ${c.conflicts_with.map(cref).join(" ")}`);
+    if (c.evidence_ref) kv.push(`<b>원문 속 근거</b> ${esc(c.evidence_ref)}`);
+    if (c.verification) kv.push(`<b>외부 확인</b> ${esc(c.verification.method)} · ${esc(c.verification.result)} · ${esc(c.verification.reference)}`);
+    kv.push(`<b>confidence</b> ${esc(c.confidence)} · <b>importance</b> ${esc(c.importance||"—")} · <b>risk</b> ${esc(c.risk||"—")} · <b>표현</b> ${esc(c.visualization)}`);
+    const inVis = visualsOf[c.id] ? [...visualsOf[c.id]] : [];
+    return `<article class="card ev-${c.evidence}" id="card-${c.id}">
+      <div class="top"><span class="cid">${c.id}</span><span class="badge ${c.evidence}">${esc(EVL[c.evidence])}</span><span class="type">${esc((c.type||[]).join(" · "))}</span>${flags}</div>
+      <div class="txt">${esc(c.text)}</div>
+      <div class="loc">${esc(c._loc)}</div>
+      <div class="more">
+        <div class="cmp"><div><div class="h">원문 구간</div>${esc(c.source_text)}</div><div><div class="h">재작성 (STE)</div>${esc(c.text)}</div></div>
+        ${c.review_note ? `<div class="note">⚑ ${esc(c.review_note)}</div>` : ""}
+        <div class="kv">${kv.join("<br>")}</div>
+        <button class="btn" data-goto-src="${c.id}" type="button">원문에서 보기</button>
+        ${inVis.length ? `<button class="btn" data-goto-vis="${c.id}" type="button">그림에서 보기 (${inVis.join(", ")})</button>` : ""}
+      </div></article>`;
+  }
+  function renderCards(){
+    const list = DATA.claims.filter(match);
+    $("#countline").textContent = `${list.length} / ${DATA.claims.length} Claim`;
+    $("#cards").innerHTML = list.map(cardHTML).join("") || `<p class="sm">조건에 맞는 Claim이 없다.</p>`;
+  }
+  $("#cards").addEventListener("click", e => {
+    const s = e.target.closest("[data-goto-src]"); if (s) return gotoSource(s.dataset.gotoSrc);
+    const v = e.target.closest("[data-goto-vis]"); if (v) return gotoVisual(v.dataset.gotoVis);
+    const top = e.target.closest(".top, .txt"); if (top) top.closest(".card").classList.toggle("open");
+  });
+
+  function openClaim(id){
+    setMode("review"); showTab("claims");
+    if (!DATA.claims.filter(match).some(c => c.id === id)) setState({q:"", type:"", ev:new Set(), quick:null, ids:null});
+    const el = $("#card-" + id); if (!el) return;
+    el.classList.add("open", "flash"); el.scrollIntoView({behavior:"smooth", block:"center"});
+    setTimeout(() => el.classList.remove("flash"), 1600);
+  }
+
+  // ---------- source
+  const byUnit = {};
+  DATA.claims.forEach(c => (byUnit[c.source_location] = byUnit[c.source_location] || []).push(c.id));
+  const skipped = Object.fromEntries(DATA.skipped.map(s => [s.unit, s.reason]));
+  function renderUnits(focusId, highlight){
+    $("#units").innerHTML = DATA.units.map(u => {
+      let t = esc(u.text);
+      if (u.id === focusId && highlight){
+        const h = esc(highlight).trim();
+        const idx = t.indexOf(h);
+        if (idx >= 0) t = t.slice(0, idx) + "<mark>" + h + "</mark>" + t.slice(idx + h.length);
+      }
+      const ids = byUnit[u.id] || [];
+      const sk = skipped[u.id];
+      return `<div class="unit ${u.kind} ${u.id===focusId?"focus":""} ${sk?"skipped":""}" id="unit-${u.id}">
+        <div class="uid">${u.id}<br><span style="font-weight:400">${u.line_start}${u.line_end!==u.line_start?"–"+u.line_end:""}행</span></div>
+        <div><div class="ut">${t}</div>
+        ${ids.length ? `<div class="uc">${ids.map(cref).join(" ")}</div>` : ""}
+        ${sk ? `<div class="sm">skip: ${esc(sk)}</div>` : ""}</div></div>`;
+    }).join("");
+  }
+  function gotoSource(id){
+    const c = C[id]; setMode("review"); showTab("source"); renderUnits(c.source_location, c.source_text);
+    const el = $("#unit-" + c.source_location); if (el) el.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+  renderUnits();
+
+  // ---------- visuals
+  function claimRefs(ids){ return (ids||[]).map(cref).join(" "); }
+  function weakestOf(ids){
+    const order = ["conflicting","source-needed","uncertain","inference","model-claim","opinion","supported","verified"];
+    const evs = (ids||[]).map(i => C[i] && C[i].evidence);
+    return order.find(o => evs.includes(o)) || "";
+  }
+  function edgeTable(v){
+    const nodes = Object.fromEntries((v.nodes||[]).map(n => [n.id, n]));
+    return `<div class="tablewrap"><table><thead><tr><th>출발</th><th>종류</th><th>라벨</th><th>도착</th><th>근거</th></tr></thead><tbody>
+        ${(v.edges||[]).map(e => `<tr><td>${esc((nodes[e.from]||{}).label||e.from)}</td><td><code>${esc(e.kind)}</code></td><td>${esc(e.label||"")}</td><td>${esc((nodes[e.to]||{}).label||e.to)}</td>
+          <td>${e.inferred ? (() => { const tag = (INF[e.inference]||{}).label || "INFERENCE"; return `<span class="badge ${tag}">${tag} ${esc(e.inference)}</span>`; })() : claimRefs(e.claims)}</td></tr>`).join("")}
+        </tbody></table></div>`;
+  }
+  function visualBody(v, pfx){
+    let body = "";
+    if (v.kind === "diagram"){
+      body = `<div class="diagram" id="${pfx}-${v.id}" data-vid="${v.id}">${v._svg || `<pre>${esc(v._mermaid)}</pre>`}</div>`;
+      if (pfx === "dg") body += `<p class="legend">노드를 누르면 그 노드의 근거 Claim만 걸러진다. 굵은 화살표(==&gt;)=원문 인과 · 점선=INFERENCE/INTERPRETATION(원문에 없음) · 노드 색=근거 중 가장 약한 상태. 원형 배치는 순서·위계를 뜻하지 않는다. 전체 라벨은 연결 근거 표에서 확인한다.</p>` + edgeTable(v);
+      return body;
+    }
+    if (v.kind === "flow"){
+      body = `<ol class="flow">${(v.steps||[]).map(s => `<li>${esc(s.text)} ${claimRefs(s.claims)}</li>`).join("")}</ol>`;
+    } else if (v.kind === "table"){
+      body = `<div class="tablewrap"><table><thead><tr>${(v.columns||[]).map(c => `<th>${esc(c)}</th>`).join("")}<th>Claim</th><th>근거 상태</th></tr></thead><tbody>
+        ${(v.rows||[]).map(r => { const w = weakestOf(r.claims); return `<tr>${(r.cells||[]).map(x => `<td>${esc(x)}</td>`).join("")}<td>${claimRefs(r.claims)}</td><td><span class="badge ${w}">${esc(EVL[w]||"")}</span></td></tr>`; }).join("")}
+        </tbody></table></div>`;
+    } else if (v.kind === "animation"){
+      body = `<p class="sm">애니메이션 후보 — 스토리보드만 만든다. 자막 = 내레이션, 장면 20~60초.</p><div class="tablewrap"><table><thead><tr><th>#</th><th>자막</th><th>움직임</th><th>초</th><th>Claim</th></tr></thead><tbody>
+        ${(v.scenes||[]).map((s,i) => `<tr><td>${i+1}</td><td>${esc(s.caption)}</td><td>${esc(s.motion)}</td><td>${esc(s.seconds||"")}</td><td>${claimRefs(s.claims)}</td></tr>`).join("")}
+        </tbody></table></div>`;
+    }
+    return body;
+  }
+  $("#visuals").innerHTML = DATA.visuals.length ? DATA.visuals.map(v => {
+    let body = visualBody(v, "dg");
+    return `<section class="vis" id="vis-${v.id}"><h3>${v.id} · ${esc(v.title)} <span class="type">${v.kind}</span></h3>${body}</section>`;
+  }).join("") : `<p class="sm">관계 구조로 그릴 만한 Claim이 없다 — 텍스트가 더 정확하다.</p>`;
+
+  // 빌드 시 생성한 SVG만 사용한다. 외부 스크립트나 API를 요청하지 않는다.
+  function renderDiagrams(){
+    const boxes = $$(".diagram[data-vid]").filter(b => !b.dataset.done && b.offsetParent !== null);
+    boxes.forEach(box => {
+      box.dataset.done = "1";
+      wireNodes(box, DATA.visuals.find(x => x.id === box.dataset.vid));
+    });
+  }
+  function nodeIdOf(g){ if (g.dataset.nodeId) return g.dataset.nodeId; const mm = (g.id||"").match(/flowchart-n_([A-Za-z0-9_]+)-\d+$/); return mm ? mm[1] : null; }
+  function wireNodes(box, v){
+    const nodes = Object.fromEntries((v.nodes||[]).map(n => [n.id, n]));
+    $$("g.node", box).forEach(g => {
+      const nd = nodes[nodeIdOf(g)]; if (!nd) return;
+      g.dataset.claims = nd.claims.join(" ");
+      g.addEventListener("click", () => {
+        if (box.closest("#mode-read")) return openDrawer(nd.claims, [], `그림 노드 "${nd.label}"의 근거`);
+        setState({ids:new Set(nd.claims), idsLabel:`노드 "${nd.label}"`, q:"", type:"", ev:new Set(), quick:null}); showTab("claims");
+      });
+    });
+  }
+  function gotoVisual(id){
+    showTab("struct");
+    const vid = [...visualsOf[id]][0];
+    const go = () => {
+      $$(".diagram g.node").forEach(g => g.classList.toggle("hl", (g.dataset.claims||"").split(" ").includes(id)));
+      const el = $("#vis-" + vid); if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
+    };
+    renderDiagrams();
+    go();
+  }
+
+  // ---------- inference
+  const inSrc = DATA.claims.filter(c => c.evidence === "inference");
+  $("#infer").innerHTML = `
+    <div class="panel" style="margin-bottom:12px"><h2>원문 작성자가 스스로 끌어낸 추론 (${inSrc.length})</h2>
+      ${inSrc.map(c => `<p>${cref(c.id)} ${esc(c.text)} ${c.dependencies&&c.dependencies.length ? `<span class="sm">← 전제 ${c.dependencies.map(cref).join(" ")}</span>` : ""}</p>`).join("") || `<p class="sm">없음</p>`}
+    </div>
+    <div class="panel"><h2>이 리포트가 덧붙인 해석 — 원문에 없음 (${DATA.inferences.length})</h2>
+      ${DATA.inferences.map(i => `<p><span class="badge ${i.label}">${i.label}</span> <b>${i.id}</b> ${esc(i.text)}<br><span class="sm">근거 ${i.based_on.map(cref).join(" ")} · 이유: ${esc(i.reason)}</span></p>`).join("") || `<p class="sm">없음 — 모든 연결이 원문 Claim으로 뒷받침된다.</p>`}
+    </div>`;
+
+  // ---------- check
+  $("#check").innerHTML = `
+    <div class="panel" style="margin-bottom:12px"><h2>구조·참조 검사</h2><table><tbody>
+      ${Object.entries(DATA.gates).map(([g,v]) => `<tr><td><code>${g}</code></td><td>${esc(gateName[g])}</td><td><span class="gate ${v}">${v}</span></td></tr>`).join("")}
+    </tbody></table></div>
+    <div class="panel" style="margin-bottom:12px"><h2>남은 경고 (${DATA.warnings.length})</h2>
+      <ul class="warnlist">${DATA.warnings.map(w => `<li><code>${esc(w.gate)}</code> <b>${esc(w.where)}</b> ${esc(w.msg)}</li>`).join("") || "<li>없음</li>"}</ul></div>
+    <div class="panel"><h2>Claim을 만들지 않은 원문 단위 (${DATA.skipped.length})</h2>
+      <ul class="warnlist">${DATA.skipped.map(s => `<li><code>${esc(s.unit)}</code> ${esc(s.reason)}</li>`).join("") || "<li>없음</li>"}</ul></div>`;
+
+  // ---------- 읽기 페이지
+  const K = Object.fromEntries((DATA.context||[]).map(x => [x.id, x]));
+  // 의견은 문장 자체가 "작성자는 ~라고 본다"로 밝히므로(검증기가 확인) 밑줄을 긋지 않는다 — 표시는 의심할 곳에만
+  const WEAK = {"source-needed":"w-bad","conflicting":"w-bad","uncertain":"w-warn","inference":"w-warn"};
+  function sentHTML(s){
+    const cls = ["s"];
+    if (WEAK[s._weakest]) cls.push(WEAK[s._weakest]);
+    const noClaims = !(s.claims||[]).length;
+    const onlyCtx = noClaims && (s.context||[]).length, onlyInf = noClaims && !onlyCtx && (s.inferences||[]).length;
+    if (onlyCtx) cls.push("ctx");
+    if (onlyInf) cls.push("inf");
+    const title = onlyCtx ? "원문 밖 배경 설명 (AI가 덧붙임)" : onlyInf ? "원문에 없는 해석 (AI가 덧붙임)" : (s._weakest ? `근거: ${EVL[s._weakest]}${s._low ? " · 근거 약함" : ""}` : "");
+    const cites = (s.claims||[]).map(id => `<sup class="cite" data-cite="${id}">${id}</sup>`).join("")
+      + (s.context||[]).map(id => `<sup class="cite kc" data-ctx="${id}">배경</sup>`).join("")
+      + (s.inferences||[]).map(id => `<sup class="cite ic" data-inf="${id}">해석</sup>`).join("");
+    return `<span class="${cls.join(" ")}" title="${esc(title)}" data-c="${esc((s.claims||[]).join(" "))}" data-k="${esc((s.context||[]).join(" "))}" data-i="${esc((s.inferences||[]).join(" "))}">${esc(s.text)}</span>${cites} `;
+  }
+  function renderEssay(){
+    const N = DATA.narrative;
+    if (!N){ $("#essay").innerHTML = `<p class="sm">이 결과에는 읽기 페이지가 없다(inspect 모드). 검토 모드를 사용한다.</p>`; return; }
+    let h = "";
+    if (N.headline) h += `<p class="headline">${sentHTML(N.headline)}</p>`;
+    h += `<p class="howto"><span class="k">위첨자 <b style="color:var(--accent)">C09</b> = 근거가 된 원문 주장 (누르면 원문 대조)</span>
+      <span class="k"><span class="s w-bad">빨간 점선</span> 출처 없음·충돌</span>
+      <span class="k"><span class="s w-warn">주황 점선</span> 불확실·추론</span>
+      <span class="k"><span class="s ctx">파란 바탕</span> 원문 밖 배경 설명</span>
+      <span class="k"><span class="s inf">주황 바탕</span> 원문에 없는 해석</span></p>`;
+    const reviewIds = new Set(DATA.review.map(r => r.id));
+    (N.sections||[]).forEach(sec => {
+      h += `<h2 id="sec-${sec.id}">${esc(sec.title)}</h2>`;
+      const secClaims = new Set();
+      (sec.blocks||[]).forEach(b => {
+        (b.sentences||[]).forEach(s => (s.claims||[]).forEach(id => secClaims.add(id)));
+        (b.items||[]).forEach(it => (it.claims||[]).forEach(id => secClaims.add(id)));
+        if (b.kind === "text") h += `<p>${(b.sentences||[]).map(sentHTML).join("")}</p>`;
+        else if (b.kind === "callout") h += `<div class="callout">${(b.sentences||[]).map(sentHTML).join("")}</div>`;
+        else if (b.kind === "example") h += `<div class="example"><div class="eh">${esc(b.label || "예시")}</div>${(b.items||[]).map(it => `<div class="ei">${it.label ? `<span class="el">${esc(it.label)}</span>` : ""}<code>${esc(it.quote)}</code>
+            ${(it.claims||[]).map(id => `<sup class="cite" data-cite="${id}">${id}</sup>`).join("")}${(it.context||[]).map(id => `<sup class="cite kc" data-ctx="${id}">배경</sup>`).join("")}</div>`).join("")}</div>`;
+        else if (b.kind === "points") h += `<ul class="pts">${(b.sentences||[]).map(s => `<li>${sentHTML(s)}</li>`).join("")}</ul>`;
+        else if (b.kind === "visual"){
+          const v = DATA.visuals.find(x => x.id === b.ref); if (!v) return;
+          const cap = b.caption || v.title;
+          h += `<figure class="fig">${visualBody(v, "rd")}<figcaption>${esc(cap)}${v.kind === "diagram" ? " — 노드를 누르면 근거가 열린다" : ""}</figcaption>
+            ${v.kind === "diagram" ? `<details><summary>연결마다 근거 보기</summary>${edgeTable(v)}</details>` : ""}</figure>`;
+        }
+      });
+      // 이 섹션이 기댄 Claim 중 우선 검토 대상 — 본문은 원문을 전하고, 의심할 곳은 여기서 짚는다
+      const flagged = [...secClaims].filter(id => reviewIds.has(id));
+      // 같은 메모를 가진 Claim 은 한 줄로 묶는다 (예: 사다리의 세 단계가 같은 지적을 공유)
+      const groups = new Map();
+      flagged.forEach(id => { const k = C[id].review_note || C[id].text; groups.set(k, (groups.get(k) || []).concat(id)); });
+      if (groups.size) h += `<div class="seccheck"><b>이 부분에서 확인할 것</b>${[...groups].map(([note, ids]) => `<button type="button" data-cite="${ids[0]}">${ids.join(" · ")} — ${esc(note)}</button>`).join("")}</div>`;
+    });
+    if (DATA.review.length){
+      h += `<section class="checks"><h2 id="sec-checks">이 글을 믿기 전에 확인할 것</h2>
+        ${DATA.review.slice(0, 7).map(r => { const c = C[r.id]; return `<button type="button" class="ck" data-cite="${r.id}">${esc(c.text)}
+          <span class="why">${esc(r.reason)}${c.review_note ? " — " + esc(c.review_note) : ""}</span></button>`; }).join("")}</section>`;
+    }
+    if ((DATA.context||[]).length){
+      h += `<section class="ctxlist"><h3>배경 설명 — 원문 밖 · AI가 덧붙임${DATA.context.some(x => x.reference) ? "" : " · 외부 확인 안 함"}</h3><dl>
+        ${DATA.context.map(x => `<dt>${esc(x.term)}</dt><dd>${esc(x.text)}${x.reference ? ` <span class="sm">(${esc(x.reference)})</span>` : ""}</dd>`).join("")}</dl></section>`;
+    }
+    h += `<p class="tolink">주장 ${DATA.claims.length}개를 하나씩 대조하려면 <button type="button" data-mode="review">검토 모드</button>로.</p>`;
+    $("#essay").innerHTML = h;
+    $("#toc").innerHTML = `<div class="tt">목차</div>` + (N.sections||[]).map(s => `<a href="#sec-${s.id}">${esc(s.title)}</a>`).join("")
+      + (DATA.review.length ? `<a href="#sec-checks">믿기 전에 확인할 것</a>` : "");
+  }
+  function openDrawer(cids, kids, title, iids){
+    $("#dtitle").textContent = title || "근거";
+    $("#dbody").innerHTML = (cids||[]).filter(id => C[id]).map(id => { const c = C[id]; return `<div class="dc">
+        <div class="row"><span class="cid">${c.id}</span><span class="badge ${c.evidence}">${esc(EVL[c.evidence])}</span><span class="type">${esc((c.type||[]).join(" · "))}</span></div>
+        <div style="margin-top:6px">${esc(c.text)}</div>
+        <div class="lab" style="margin-top:10px">원문</div><div class="sm" style="text-transform:none">${esc(c._loc)}</div><div class="q">${esc(c.source_text)}</div>
+        ${c.review_note ? `<div class="note">⚑ ${esc(c.review_note)}</div>` : ""}
+        <button class="btn" type="button" data-goto-src2="${c.id}">원문 전체에서 보기</button></div>`; }).join("")
+      + (kids||[]).filter(id => K[id]).map(id => { const x = K[id]; return `<div class="dc k">
+        <div class="lab" style="color:var(--ctx)">CONTEXT · 원문 밖 · AI가 덧붙인 설명</div>
+        <div style="margin-top:6px"><b>${esc(x.term)}</b> — ${esc(x.text)}</div>
+        <div class="sm" style="margin-top:6px">왜 넣었나: ${esc(x.reason)}${x.reference ? " · 출처: " + esc(x.reference) : " · 외부 확인 안 함"}</div></div>`; }).join("")
+      + (iids||[]).filter(id => INF[id]).map(id => { const x = INF[id]; return `<div class="dc k" style="border-left-color:var(--warn)">
+        <div class="lab" style="color:var(--warn)">${esc(x.label)} · 원문에 없음 · AI가 덧붙인 해석</div>
+        <div style="margin-top:6px">${esc(x.text)}</div>
+        <div class="sm" style="margin-top:6px">기댄 원문 주장: ${x.based_on.map(cref).join(" ")}<br>왜 넣었나: ${esc(x.reason)}</div></div>`; }).join("");
+    $("#drawer").classList.add("open"); $("#drawer").setAttribute("aria-hidden", "false");
+  }
+  function closeDrawer(){ $("#drawer").classList.remove("open"); $("#drawer").setAttribute("aria-hidden", "true"); }
+  $("#dclose").onclick = closeDrawer;
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+  $("#dbody").addEventListener("click", e => { const b = e.target.closest("[data-goto-src2]"); if (b){ closeDrawer(); gotoSource(b.dataset.gotoSrc2); } });
+  $("#essay").addEventListener("click", e => {
+    const ck = e.target.closest(".ck, .seccheck button"); if (ck) return openDrawer([ck.dataset.cite], [], "확인할 주장");
+    const ic = e.target.closest("sup.cite.ic"); if (ic) return openDrawer([], [], "덧붙인 해석", [ic.dataset.inf]);
+    const ec = e.target.closest(".example sup.cite"); if (ec) return ec.dataset.ctx ? openDrawer([], [ec.dataset.ctx], "배경 설명") : openDrawer([ec.dataset.cite], [], "예시의 근거");
+    const c = e.target.closest("sup.cite");
+    if (c){
+      // 위첨자 바로 앞의 문장 span 을 찾는다 (위첨자가 여러 개면 거슬러 올라간다)
+      let span = c; while (span && !span.classList.contains("s")) span = span.previousElementSibling;
+      const cids = span ? span.dataset.c.split(" ").filter(Boolean) : [], kids = span ? span.dataset.k.split(" ").filter(Boolean) : [];
+      if (span){ span.classList.add("flash"); setTimeout(() => span.classList.remove("flash"), 1200); }
+      return openDrawer(c.dataset.ctx ? [] : cids, c.dataset.ctx ? kids : [], c.dataset.ctx ? "배경 설명" : "이 문장의 근거");
+    }
+  });
+
+  // ---------- 모드
+  function setMode(m){
+    if (m === "read" && !DATA.narrative) m = "review";
+    $("#mode-read").hidden = m !== "read"; $("#mode-review").hidden = m !== "review";
+    $$(".modes button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === m ? "true" : "false"));
+    $("#kicker").textContent = m === "read" ? "읽기 · 원문 주장으로 추적되는 설명" : "검토 · Understanding Report";
+    if (location.hash !== "#" + m) history.replaceState(null, "", "#" + m);
+    if (m === "review") closeDrawer();
+    setTimeout(renderDiagrams, 0);
+  }
+  document.addEventListener("click", e => { const b = e.target.closest("[data-mode]"); if (b && b.tagName === "BUTTON") setMode(b.dataset.mode); });
+
+  renderEssay();
+  syncControls(); renderCards();
+  setMode(location.hash === "#review" || !DATA.narrative ? "review" : "read");
+})();
+</script>
+</body>
+</html>

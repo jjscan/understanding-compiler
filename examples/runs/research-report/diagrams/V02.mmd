@@ -1,0 +1,28 @@
+flowchart LR
+  n_D1["첫 PR 머지까지 중앙값 (집단별)<br/><small>C08 C09 C10</small>"]
+  n_D2["리뷰 코멘트 2.4배<br/><small>C13</small>"]
+  n_I1["멘토 페어링이 온보딩 지연을 해소한다<br/><small>C14</small>"]
+  n_I2["리뷰 코멘트가 관습 습득을 빠르게 함(추정)<br/><small>C15 C16</small>"]
+  n_R1["모든 원격 팀 멘토 페어링 의무화<br/><small>C25</small>"]
+  n_R2["온보딩 기간이 사무실 팀 수준으로 줄어듦(예측)<br/><small>C26</small>"]
+  n_L1["희망한 팀만 멘토 페어링 운영 · 자기 선택 가능성<br/><small>C21 C22</small>"]
+  n_L2["PR 크기 기준이 달라 직접 비교하기 어렵다<br/><small>C23 C24</small>"]
+  n_L3["표본 86명 · 무작위 아닌 팀 배정<br/><small>C19 C20</small>"]
+  n_D1 -.->|"INFERENCE · 해석의 근거 · I01"| n_I1
+  n_D2 -.->|"INFERENCE · 해석의 근거 · I01"| n_I2
+  n_I2 ==>|"이유로 보임 · C16"| n_I1
+  n_I1 -.->|"INFERENCE · 권고의 근거 · I02"| n_R1
+  n_R1 -->|"의무화하면 · C26"| n_R2
+  n_L1 -.->|"INTERPRETATION · 인과 해석 약화 · I03"| n_I1
+  n_L3 -.->|"INTERPRETATION · 인과 해석 약화 · I03"| n_I1
+  n_L2 -.->|"INTERPRETATION · 팀 간 비교 약화 · I03"| n_D1
+  classDef ev_supported fill:#e7f5ec,stroke:#2f855a
+  class n_D1,n_D2 ev_supported
+  classDef ev_inference fill:#fff4e6,stroke:#d9480f,stroke-dasharray:4 3
+  class n_I1,n_R2,n_L2 ev_inference
+  classDef ev_uncertain fill:#fff9db,stroke:#e67700,stroke-dasharray:4 3
+  class n_I2,n_L1 ev_uncertain
+  classDef ev_opinion fill:#f3f0ff,stroke:#7048e8
+  class n_R1 ev_opinion
+  classDef ev_model_claim fill:#f1f3f5,stroke:#868e96
+  class n_L3 ev_model_claim

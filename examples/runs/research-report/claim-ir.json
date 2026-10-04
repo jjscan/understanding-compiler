@@ -1,0 +1,1386 @@
+{
+  "version": "1.0",
+  "meta": {
+    "title": "원격 근무와 신입 개발자 온보딩 기간: 사내 조사 보고서",
+    "mode": "understand",
+    "source_path": "source.md",
+    "source_kind": "research-report",
+    "created": "2026-10-03",
+    "external_verification": false
+  },
+  "source": {
+    "units": [
+      {
+        "id": "P01",
+        "kind": "heading",
+        "text": "원격 근무와 신입 개발자 온보딩 기간: 사내 조사 보고서",
+        "line_start": 1,
+        "line_end": 1,
+        "section": "원격 근무와 신입 개발자 온보딩 기간: 사내 조사 보고서"
+      },
+      {
+        "id": "P02",
+        "kind": "quote",
+        "text": "테스트 케이스 B — 리서치 보고서. 가상의 회사 데이터를 쓰는 예시 문서다. 수치는 실제 통계가 아니다.",
+        "line_start": 3,
+        "line_end": 3,
+        "section": "원격 근무와 신입 개발자 온보딩 기간: 사내 조사 보고서"
+      },
+      {
+        "id": "P03",
+        "kind": "heading",
+        "text": "요약",
+        "line_start": 5,
+        "line_end": 5,
+        "section": "요약"
+      },
+      {
+        "id": "P04",
+        "kind": "paragraph",
+        "text": "원격 근무 팀에 합류한 신입 개발자는 사무실 근무 팀보다 첫 PR 머지까지 더 오래 걸렸다. 다만 멘토 페어링을 운영한 원격 팀에서는 차이가 거의 없었다.",
+        "line_start": 7,
+        "line_end": 7,
+        "section": "요약"
+      },
+      {
+        "id": "P05",
+        "kind": "heading",
+        "text": "1. 조사 방법",
+        "line_start": 9,
+        "line_end": 9,
+        "section": "1. 조사 방법"
+      },
+      {
+        "id": "P06",
+        "kind": "paragraph",
+        "text": "2024년 3월부터 2025년 2월까지 입사한 신입 개발자 86명의 저장소 기록을 분석했다. 원격 팀 소속은 47명, 사무실 팀 소속은 39명이다. 첫 PR 머지까지 걸린 영업일 수를 온보딩 기간의 대리 지표로 사용했다.",
+        "line_start": 11,
+        "line_end": 11,
+        "section": "1. 조사 방법"
+      },
+      {
+        "id": "P07",
+        "kind": "heading",
+        "text": "2. 결과",
+        "line_start": 13,
+        "line_end": 13,
+        "section": "2. 결과"
+      },
+      {
+        "id": "P08",
+        "kind": "table-row",
+        "text": "| 집단 | 인원 | 첫 PR 머지까지 중앙값(영업일) |",
+        "line_start": 15,
+        "line_end": 15,
+        "section": "2. 결과"
+      },
+      {
+        "id": "P09",
+        "kind": "table-row",
+        "text": "| 사무실 팀 | 39 | 6 |",
+        "line_start": 17,
+        "line_end": 17,
+        "section": "2. 결과"
+      },
+      {
+        "id": "P10",
+        "kind": "table-row",
+        "text": "| 원격 팀(멘토 페어링 없음) | 28 | 11 |",
+        "line_start": 18,
+        "line_end": 18,
+        "section": "2. 결과"
+      },
+      {
+        "id": "P11",
+        "kind": "table-row",
+        "text": "| 원격 팀(멘토 페어링 있음) | 19 | 7 |",
+        "line_start": 19,
+        "line_end": 19,
+        "section": "2. 결과"
+      },
+      {
+        "id": "P12",
+        "kind": "paragraph",
+        "text": "원격 팀 전체의 중앙값은 9영업일로 사무실 팀보다 3영업일 길었다.",
+        "line_start": 21,
+        "line_end": 21,
+        "section": "2. 결과"
+      },
+      {
+        "id": "P13",
+        "kind": "paragraph",
+        "text": "멘토 페어링 팀의 신입은 첫 달 코드 리뷰 코멘트를 평균 2.4배 더 많이 받았다(리뷰 시스템 로그 기준).",
+        "line_start": 23,
+        "line_end": 23,
+        "section": "2. 결과"
+      },
+      {
+        "id": "P14",
+        "kind": "heading",
+        "text": "3. 해석",
+        "line_start": 25,
+        "line_end": 25,
+        "section": "3. 해석"
+      },
+      {
+        "id": "P15",
+        "kind": "paragraph",
+        "text": "멘토 페어링이 원격 근무의 온보딩 지연을 해소한다. 리뷰 코멘트가 많을수록 신입이 코드베이스의 관습을 빨리 익히기 때문으로 보인다.",
+        "line_start": 27,
+        "line_end": 27,
+        "section": "3. 해석"
+      },
+      {
+        "id": "P16",
+        "kind": "paragraph",
+        "text": "외부 연구도 비슷한 경향을 보고한다. GitLab의 2023 원격 근무 보고서는 원격 신입의 생산성 도달 시간이 더 길다고 밝혔다.",
+        "line_start": 29,
+        "line_end": 29,
+        "section": "3. 해석"
+      },
+      {
+        "id": "P17",
+        "kind": "heading",
+        "text": "4. 한계",
+        "line_start": 31,
+        "line_end": 31,
+        "section": "4. 한계"
+      },
+      {
+        "id": "P18",
+        "kind": "paragraph",
+        "text": "표본이 86명으로 작고, 팀 배정이 무작위가 아니다. 멘토 페어링은 희망한 팀만 운영했으므로, 원래 온보딩에 관심이 많은 팀이었을 가능성이 있다.",
+        "line_start": 33,
+        "line_end": 33,
+        "section": "4. 한계"
+      },
+      {
+        "id": "P19",
+        "kind": "paragraph",
+        "text": "첫 PR 머지 시점은 팀마다 PR 크기 기준이 달라 직접 비교하기 어렵다.",
+        "line_start": 35,
+        "line_end": 35,
+        "section": "4. 한계"
+      },
+      {
+        "id": "P20",
+        "kind": "heading",
+        "text": "5. 권고",
+        "line_start": 37,
+        "line_end": 37,
+        "section": "5. 권고"
+      },
+      {
+        "id": "P21",
+        "kind": "paragraph",
+        "text": "모든 원격 팀에 멘토 페어링을 의무화해야 한다. 이렇게 하면 온보딩 기간이 사무실 팀 수준으로 줄어들 것이다.",
+        "line_start": 39,
+        "line_end": 39,
+        "section": "5. 권고"
+      }
+    ]
+  },
+  "coverage": {
+    "skipped": [
+      {
+        "unit": "P08",
+        "reason": "결과 표 머리글 — 열 이름(집단·인원·중앙값(영업일))만 있다. 단위는 C08~C10 문장에 반영"
+      }
+    ]
+  },
+  "entities": [
+    {
+      "id": "E01",
+      "name": "원격 팀",
+      "aliases": [
+        "원격 근무 팀"
+      ],
+      "claims": [
+        "C02",
+        "C05",
+        "C11",
+        "C12",
+        "C25",
+        "C26"
+      ]
+    },
+    {
+      "id": "E02",
+      "name": "사무실 팀",
+      "aliases": [
+        "사무실 근무 팀"
+      ],
+      "claims": [
+        "C02",
+        "C03",
+        "C06",
+        "C08",
+        "C12",
+        "C26"
+      ]
+    },
+    {
+      "id": "E03",
+      "name": "멘토 페어링 원격 팀",
+      "aliases": [
+        "원격 팀(멘토 페어링 있음)",
+        "멘토 페어링을 운영한 원격 팀"
+      ],
+      "claims": [
+        "C03",
+        "C10"
+      ]
+    },
+    {
+      "id": "E04",
+      "name": "멘토 페어링 없는 원격 팀",
+      "aliases": [
+        "원격 팀(멘토 페어링 없음)"
+      ],
+      "claims": [
+        "C09"
+      ]
+    },
+    {
+      "id": "E05",
+      "name": "신입 개발자",
+      "claims": [
+        "C02",
+        "C04",
+        "C13",
+        "C15"
+      ]
+    },
+    {
+      "id": "E06",
+      "name": "첫 PR 머지까지 걸린 영업일 수",
+      "claims": [
+        "C02",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11"
+      ]
+    },
+    {
+      "id": "E07",
+      "name": "온보딩 기간",
+      "claims": [
+        "C07",
+        "C14",
+        "C26"
+      ]
+    },
+    {
+      "id": "E08",
+      "name": "GitLab의 2023 원격 근무 보고서",
+      "claims": [
+        "C18"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "id": "C01",
+      "text": "보고서의 수치는 실제 통계가 아닌 가상의 회사 데이터다.",
+      "type": [
+        "fact"
+      ],
+      "source_text": "가상의 회사 데이터를 쓰는 예시 문서다. 수치는 실제 통계가 아니다.",
+      "source_location": "P02",
+      "evidence": "model-claim",
+      "confidence": "unknown",
+      "visualization": "text",
+      "importance": "supporting",
+      "review_note": "문서 머리의 고지문. 이후 모든 수치(C04~C13)와 외부 인용(C17·C18)을 읽는 전제다."
+    },
+    {
+      "id": "C02",
+      "text": "원격 팀의 신입 개발자는 사무실 팀보다 첫 PR 머지까지 더 오래 걸렸다.",
+      "type": [
+        "comparison",
+        "fact"
+      ],
+      "source_text": "원격 근무 팀에 합류한 신입 개발자는 사무실 근무 팀보다 첫 PR 머지까지 더 오래 걸렸다.",
+      "source_location": "P04",
+      "evidence": "supported",
+      "confidence": "low",
+      "visualization": "text",
+      "evidence_ref": "2. 결과 표(P09~P11)와 원격 팀 전체 중앙값 문장(P12)",
+      "importance": "core",
+      "flags": [
+        "missing-condition"
+      ],
+      "entities": [
+        "E01",
+        "E02",
+        "E05",
+        "E06"
+      ],
+      "review_note": "요약은 '중앙값' 기준이라는 조건을 빼고 말한다. 원문 한계(C24)는 첫 PR 머지 시점을 팀 간에 직접 비교하기 어렵다고 스스로 밝힌다 → confidence low."
+    },
+    {
+      "id": "C03",
+      "text": "멘토 페어링 원격 팀은 사무실 팀과 첫 PR 머지 기간 차이가 거의 없었다.",
+      "type": [
+        "comparison",
+        "fact"
+      ],
+      "source_text": "다만 멘토 페어링을 운영한 원격 팀에서는 차이가 거의 없었다.",
+      "source_location": "P04",
+      "evidence": "supported",
+      "confidence": "low",
+      "visualization": "text",
+      "evidence_ref": "2. 결과 표 P11(멘토 페어링 원격 팀)·P09(사무실 팀) 행",
+      "importance": "core",
+      "risk": "high",
+      "flags": [
+        "vague"
+      ],
+      "entities": [
+        "E03",
+        "E02"
+      ],
+      "review_note": "'거의 없었다'는 평가어다. 표 값은 7 대 6영업일이고 표본은 19명 대 39명. 무엇을 '거의 없음'으로 볼지 기준이 없다."
+    },
+    {
+      "id": "C04",
+      "text": "본 조사는 2024년 3월부터 2025년 2월까지 입사한 신입 개발자 86명의 저장소 기록을 분석했다.",
+      "type": [
+        "fact",
+        "quantitative"
+      ],
+      "source_text": "2024년 3월부터 2025년 2월까지 입사한 신입 개발자 86명의 저장소 기록을 분석했다.",
+      "source_location": "P06",
+      "evidence": "model-claim",
+      "confidence": "unknown",
+      "visualization": "text",
+      "importance": "supporting",
+      "entities": [
+        "E05"
+      ]
+    },
+    {
+      "id": "C05",
+      "text": "원격 팀 소속 신입 개발자는 47명이다.",
+      "type": [
+        "fact",
+        "quantitative"
+      ],
+      "source_text": "원격 팀 소속은 47명",
+      "source_location": "P06",
+      "evidence": "model-claim",
+      "confidence": "unknown",
+      "visualization": "table",
+      "importance": "detail",
+      "flags": [
+        "compound-split"
+      ],
+      "entities": [
+        "E01"
+      ],
+      "review_note": "P06 둘째 문장을 C05·C06으로 나눔. 47 = 표의 28 + 19와 일치."
+    },
+    {
+      "id": "C06",
+      "text": "사무실 팀 소속 신입 개발자는 39명이다.",
+      "type": [
+        "fact",
+        "quantitative"
+      ],
+      "source_text": "사무실 팀 소속은 39명이다",
+      "source_location": "P06",
+      "evidence": "model-claim",
+      "confidence": "unknown",
+      "visualization": "table",
+      "importance": "detail",
+      "flags": [
+        "compound-split"
+      ],
+      "entities": [
+        "E02"
+      ],
+      "review_note": "P06 둘째 문장을 C05·C06으로 나눔. 표의 사무실 팀 인원과 일치."
+    },
+    {
+      "id": "C07",
+      "text": "본 조사는 첫 PR 머지까지 걸린 영업일 수를 온보딩 기간의 대리 지표로 사용했다.",
+      "type": [
+        "definition"
+      ],
+      "source_text": "첫 PR 머지까지 걸린 영업일 수를 온보딩 기간의 대리 지표로 사용했다.",
+      "source_location": "P06",
+      "evidence": "model-claim",
+      "confidence": "unknown",
+      "visualization": "text",
+      "importance": "core",
+      "risk": "medium",
+      "entities": [
+        "E06",
+        "E07"
+      ],
+      "review_note": "측정값(첫 PR 머지 영업일)과 결론의 대상(온보딩 기간)이 다르다. 해석(C14)·권고(C26)는 대리 지표가 아니라 '온보딩 기간' 자체를 말한다."
+    },
+    {
+      "id": "C08",
+      "text": "사무실 팀 신입 개발자 39명의 첫 PR 머지까지 중앙값은 6영업일이다.",
+      "type": [
+        "fact",
+        "quantitative"
+      ],
+      "source_text": "| 사무실 팀 | 39 | 6 |",
+      "source_location": "P09",
+      "evidence": "supported",
+      "confidence": "unknown",
+      "visualization": "table",
+      "evidence_ref": "2. 결과 표 — 저장소 기록 분석(P06) 사내 데이터, 원자료 미공개",
+      "importance": "supporting",
+      "entities": [
+        "E02",
+        "E06"
+      ]
+    },
+    {
+      "id": "C09",
+      "text": "멘토 페어링 없는 원격 팀 신입 개발자 28명의 첫 PR 머지까지 중앙값은 11영업일이다.",
+      "type": [
+        "fact",
+        "quantitative"
+      ],
+      "source_text": "| 원격 팀(멘토 페어링 없음) | 28 | 11 |",
+      "source_location": "P10",
+      "evidence": "supported",
+      "confidence": "unknown",
+      "visualization": "table",
+      "evidence_ref": "2. 결과 표 — 저장소 기록 분석(P06) 사내 데이터, 원자료 미공개",
+      "importance": "supporting",
+      "entities": [
+        "E04",
+        "E06"
+      ]
+    },
+    {
+      "id": "C10",
+      "text": "멘토 페어링 원격 팀 신입 개발자 19명의 첫 PR 머지까지 중앙값은 7영업일이다.",
+      "type": [
+        "fact",
+        "quantitative"
+      ],
+      "source_text": "| 원격 팀(멘토 페어링 있음) | 19 | 7 |",
+      "source_location": "P11",
+      "evidence": "supported",
+      "confidence": "unknown",
+      "visualization": "table",
+      "evidence_ref": "2. 결과 표 — 저장소 기록 분석(P06) 사내 데이터, 원자료 미공개",
+      "importance": "supporting",
+      "entities": [
+        "E03",
+        "E06"
+      ]
+    },
+    {
+      "id": "C11",
+      "text": "원격 팀 전체의 첫 PR 머지까지 중앙값은 9영업일이다.",
+      "type": [
+        "fact",
+        "quantitative"
+      ],
+      "source_text": "원격 팀 전체의 중앙값은 9영업일로 사무실 팀보다 3영업일 길었다.",
+      "source_location": "P12",
+      "evidence": "supported",
+      "confidence": "unknown",
+      "visualization": "table",
+      "evidence_ref": "2. 결과 표 — 저장소 기록 분석(P06) 사내 데이터, 원자료 미공개",
+      "importance": "supporting",
+      "flags": [
+        "compound-split"
+      ],
+      "entities": [
+        "E01",
+        "E06"
+      ],
+      "review_note": "하위 집단 중앙값(11, 7)만으로는 전체 중앙값 9를 다시 계산할 수 없다. 원자료로만 확인 가능."
+    },
+    {
+      "id": "C12",
+      "text": "원격 팀 전체의 중앙값은 사무실 팀 중앙값보다 3영업일 길었다.",
+      "type": [
+        "comparison",
+        "quantitative"
+      ],
+      "source_text": "원격 팀 전체의 중앙값은 9영업일로 사무실 팀보다 3영업일 길었다.",
+      "source_location": "P12",
+      "evidence": "supported",
+      "confidence": "low",
+      "visualization": "text",
+      "evidence_ref": "2. 결과 표 — 저장소 기록 분석(P06) 사내 데이터, 원자료 미공개",
+      "importance": "core",
+      "flags": [
+        "compound-split"
+      ],
+      "entities": [
+        "E01",
+        "E02"
+      ],
+      "review_note": "9 − 6 = 3으로 표와 산술은 맞다. 다만 한계(C24)대로 팀마다 PR 크기 기준이 달라 직접 비교의 의미가 약하다."
+    },
+    {
+      "id": "C13",
+      "text": "멘토 페어링 팀의 신입 개발자는 첫 달에 코드 리뷰 코멘트를 평균 2.4배 더 많이 받았다.",
+      "type": [
+        "comparison",
+        "quantitative"
+      ],
+      "source_text": "멘토 페어링 팀의 신입은 첫 달 코드 리뷰 코멘트를 평균 2.4배 더 많이 받았다(리뷰 시스템 로그 기준).",
+      "source_location": "P13",
+      "evidence": "supported",
+      "confidence": "low",
+      "visualization": "diagram",
+      "evidence_ref": "리뷰 시스템 로그 기준",
+      "importance": "supporting",
+      "flags": [
+        "number-unclear",
+        "naming-drift"
+      ],
+      "entities": [
+        "E05"
+      ],
+      "review_note": "비교 대상이 없다(멘토 페어링 없는 원격 팀? 사무실 팀? 나머지 전체?). '2.4배 더 많이'가 2.4배인지 3.4배인지도 모호. '멘토 페어링 팀'이 표의 '원격 팀(멘토 페어링 있음)'과 같은 집단인지 원문이 확정하지 않는다."
+    },
+    {
+      "id": "C14",
+      "text": "멘토 페어링은 원격 근무의 온보딩 지연을 해소한다.",
+      "type": [
+        "causal"
+      ],
+      "source_text": "멘토 페어링이 원격 근무의 온보딩 지연을 해소한다.",
+      "source_location": "P15",
+      "evidence": "inference",
+      "confidence": "unknown",
+      "visualization": "diagram",
+      "importance": "core",
+      "risk": "high",
+      "flags": [
+        "unsupported",
+        "fact-inference-mix"
+      ],
+      "dependencies": [
+        "C08",
+        "C09",
+        "C10"
+      ],
+      "entities": [
+        "E07"
+      ],
+      "review_note": "관찰 자료(비무작위 배정 C20, 희망 팀만 운영 C21, 자기 선택 가능성 C22, 비교 곤란 C24)에서 단정형 인과를 끌어냈다. 원문 한계 절이 스스로 이 인과 해석을 약화시키는데 해석 절은 유보 없이 말한다. 측정값도 온보딩 기간이 아니라 대리 지표(C07)다."
+    },
+    {
+      "id": "C15",
+      "text": "리뷰 코멘트가 많을수록 신입 개발자가 코드베이스의 관습을 빨리 익히는 것으로 보인다.",
+      "type": [
+        "causal",
+        "uncertain"
+      ],
+      "source_text": "리뷰 코멘트가 많을수록 신입이 코드베이스의 관습을 빨리 익히기 때문으로 보인다.",
+      "source_location": "P15",
+      "evidence": "uncertain",
+      "confidence": "unknown",
+      "visualization": "diagram",
+      "importance": "supporting",
+      "flags": [
+        "compound-split"
+      ],
+      "entities": [
+        "E05"
+      ],
+      "review_note": "'관습을 익히는 속도'는 조사에서 측정하지 않았다. 원문도 '보인다'로 유보한다."
+    },
+    {
+      "id": "C16",
+      "text": "멘토 페어링이 온보딩 지연을 해소하는 이유는 리뷰 코멘트가 관습 습득을 빠르게 하기 때문으로 보인다.",
+      "type": [
+        "causal",
+        "uncertain"
+      ],
+      "source_text": "리뷰 코멘트가 많을수록 신입이 코드베이스의 관습을 빨리 익히기 때문으로 보인다.",
+      "source_location": "P15",
+      "evidence": "uncertain",
+      "confidence": "unknown",
+      "visualization": "diagram",
+      "importance": "supporting",
+      "flags": [
+        "compound-split"
+      ],
+      "dependencies": [
+        "C13",
+        "C14",
+        "C15"
+      ],
+      "review_note": "원문 '때문으로 보인다'를 메커니즘(C15)과 '그것이 C14의 이유'(C16)로 나눔."
+    },
+    {
+      "id": "C17",
+      "text": "외부 연구도 이 조사와 비슷한 경향을 보고한다.",
+      "type": [
+        "fact"
+      ],
+      "source_text": "외부 연구도 비슷한 경향을 보고한다.",
+      "source_location": "P16",
+      "evidence": "source-needed",
+      "confidence": "unknown",
+      "visualization": "text",
+      "importance": "supporting",
+      "flags": [
+        "vague",
+        "overgeneralization"
+      ],
+      "review_note": "'외부 연구'(복수)의 근거는 보고서 1건(C18)뿐이다. '비슷한 경향'이 원격 지연(C02)만인지 멘토 페어링 효과(C14)까지인지 모호하다 — C18은 앞의 것만 말한다."
+    },
+    {
+      "id": "C18",
+      "text": "GitLab의 2023 원격 근무 보고서는 원격 신입의 생산성 도달 시간이 더 길다고 밝혔다.",
+      "type": [
+        "fact",
+        "comparison"
+      ],
+      "source_text": "GitLab의 2023 원격 근무 보고서는 원격 신입의 생산성 도달 시간이 더 길다고 밝혔다.",
+      "source_location": "P16",
+      "evidence": "source-needed",
+      "confidence": "unknown",
+      "visualization": "text",
+      "importance": "supporting",
+      "entities": [
+        "E08"
+      ],
+      "review_note": "보고서 이름만 있고 링크·쪽·수치가 없어 원문 안에서 확인할 수 없다 → source-needed. 외부 확인을 하지 않았다(external_verification=false). 고지문(C01)상 이 인용도 예시일 수 있다. 측정 지표(생산성 도달 시간)가 이 조사의 지표(C07)와 다르다."
+    },
+    {
+      "id": "C19",
+      "text": "본 조사의 표본은 86명으로 작다.",
+      "type": [
+        "opinion",
+        "quantitative"
+      ],
+      "source_text": "표본이 86명으로 작고",
+      "source_location": "P18",
+      "evidence": "opinion",
+      "confidence": "unknown",
+      "visualization": "text",
+      "importance": "supporting",
+      "flags": [
+        "compound-split"
+      ],
+      "review_note": "P18 첫 문장을 C19·C20으로 나눔. 하위 집단은 19~39명이다."
+    },
+    {
+      "id": "C20",
+      "text": "팀 배정은 무작위가 아니다.",
+      "type": [
+        "fact"
+      ],
+      "source_text": "팀 배정이 무작위가 아니다.",
+      "source_location": "P18",
+      "evidence": "model-claim",
+      "confidence": "unknown",
+      "visualization": "diagram",
+      "importance": "core",
+      "flags": [
+        "compound-split"
+      ],
+      "review_note": "원문이 스스로 밝힌 한계. 집단 간 차이를 원격 근무·멘토 페어링 효과로 돌릴 수 없게 만든다."
+    },
+    {
+      "id": "C21",
+      "text": "멘토 페어링은 희망한 팀만 운영했다.",
+      "type": [
+        "fact"
+      ],
+      "source_text": "멘토 페어링은 희망한 팀만 운영했으므로",
+      "source_location": "P18",
+      "evidence": "model-claim",
+      "confidence": "unknown",
+      "visualization": "diagram",
+      "importance": "core",
+      "flags": [
+        "compound-split"
+      ],
+      "review_note": "P18 둘째 문장을 사실(C21)과 유보된 추론(C22)으로 나눔."
+    },
+    {
+      "id": "C22",
+      "text": "멘토 페어링을 운영한 팀은 원래 온보딩에 관심이 많은 팀이었을 가능성이 있다.",
+      "type": [
+        "uncertain"
+      ],
+      "source_text": "원래 온보딩에 관심이 많은 팀이었을 가능성이 있다.",
+      "source_location": "P18",
+      "evidence": "uncertain",
+      "confidence": "unknown",
+      "visualization": "diagram",
+      "importance": "core",
+      "risk": "high",
+      "flags": [
+        "compound-split"
+      ],
+      "dependencies": [
+        "C21"
+      ],
+      "review_note": "자기 선택(선택 편향) 가능성. 사실이면 C10의 짧은 중앙값이 멘토 페어링이 아니라 팀 성향 때문일 수 있다 — C14·C26과 정면으로 맞선다."
+    },
+    {
+      "id": "C23",
+      "text": "팀마다 PR 크기 기준이 다르다.",
+      "type": [
+        "fact"
+      ],
+      "source_text": "팀마다 PR 크기 기준이 달라",
+      "source_location": "P19",
+      "evidence": "model-claim",
+      "confidence": "unknown",
+      "visualization": "text",
+      "importance": "supporting",
+      "flags": [
+        "compound-split"
+      ],
+      "review_note": "P19 문장을 사실(C23)과 그로부터 끌어낸 판단(C24)으로 나눔."
+    },
+    {
+      "id": "C24",
+      "text": "PR 크기 기준이 달라서 첫 PR 머지 시점을 팀 간에 직접 비교하기 어렵다.",
+      "type": [
+        "causal"
+      ],
+      "source_text": "첫 PR 머지 시점은 팀마다 PR 크기 기준이 달라 직접 비교하기 어렵다.",
+      "source_location": "P19",
+      "evidence": "inference",
+      "confidence": "unknown",
+      "visualization": "diagram",
+      "importance": "core",
+      "risk": "high",
+      "dependencies": [
+        "C23"
+      ],
+      "review_note": "이 한계는 결과 절의 팀 간 비교(C02·C03·C12) 전체에 걸린다. 그런데 요약·해석·권고는 이 비교를 그대로 결론에 쓴다."
+    },
+    {
+      "id": "C25",
+      "text": "모든 원격 팀은 멘토 페어링을 의무화해야 한다.",
+      "type": [
+        "opinion"
+      ],
+      "source_text": "모든 원격 팀에 멘토 페어링을 의무화해야 한다.",
+      "source_location": "P21",
+      "evidence": "opinion",
+      "confidence": "unknown",
+      "visualization": "diagram",
+      "importance": "core",
+      "risk": "high",
+      "flags": [
+        "overgeneralization"
+      ],
+      "entities": [
+        "E01"
+      ],
+      "review_note": "희망한 팀만 운영한 자료(C21)에서 '모든 원격 팀 의무화'로 넓혔다. 희망하지 않은 팀에 강제했을 때의 효과는 자료에 없다."
+    },
+    {
+      "id": "C26",
+      "text": "멘토 페어링을 의무화하면 원격 팀의 온보딩 기간은 사무실 팀 수준으로 줄어들 것이다.",
+      "type": [
+        "prediction",
+        "conditional",
+        "causal"
+      ],
+      "source_text": "이렇게 하면 온보딩 기간이 사무실 팀 수준으로 줄어들 것이다.",
+      "source_location": "P21",
+      "evidence": "inference",
+      "confidence": "unknown",
+      "visualization": "diagram",
+      "importance": "core",
+      "risk": "high",
+      "flags": [
+        "hedge-dropped-in-source",
+        "unsupported"
+      ],
+      "dependencies": [
+        "C14",
+        "C03",
+        "C25"
+      ],
+      "entities": [
+        "E01",
+        "E02",
+        "E07"
+      ],
+      "review_note": "한계 절(C22)은 선택 효과 '가능성'을 유보했는데 권고 절은 효과를 단정적으로 예측한다. 측정값은 대리 지표(C07)인데 예측 대상은 온보딩 기간이다."
+    }
+  ],
+  "relations": [],
+  "inferences": [
+    {
+      "id": "I01",
+      "label": "INFERENCE",
+      "text": "저자의 해석(C14·C16)은 결과 절의 집단별 중앙값(C08~C10)과 리뷰 코멘트 수(C13)에 근거한 것으로 보인다.",
+      "based_on": [
+        "C08",
+        "C09",
+        "C10",
+        "C13",
+        "C14",
+        "C16"
+      ],
+      "reason": "원문 해석 절은 결과 절의 어느 수치를 근거로 쓰는지 지목하지 않는다. 결론→근거 사슬을 보이려면 이 연결이 필요하다."
+    },
+    {
+      "id": "I02",
+      "label": "INFERENCE",
+      "text": "권고(C25)는 해석(C14)에 기대고 있는 것으로 보인다.",
+      "based_on": [
+        "C14",
+        "C25"
+      ],
+      "reason": "원문 권고 절은 근거를 지목하지 않는다. 권고가 무엇에 기대는지 보여야 한계의 영향 범위를 판단할 수 있다."
+    },
+    {
+      "id": "I03",
+      "label": "INTERPRETATION",
+      "text": "원문 한계(C20·C21·C22·C24)는 해석 C14의 인과 주장과 결과 절의 팀 간 비교를 약화시킨다.",
+      "based_on": [
+        "C14",
+        "C20",
+        "C21",
+        "C22",
+        "C24"
+      ],
+      "reason": "원문은 한계를 나열하지만 그것이 해석·권고에 어떤 영향을 주는지 말하지 않는다. 인과 과잉 주장을 검토하려면 이 연결을 보여야 한다."
+    }
+  ],
+  "visuals": [
+    {
+      "id": "V01",
+      "kind": "table",
+      "title": "집단별 첫 PR 머지까지 중앙값 (원문 결과 표 + 본문)",
+      "columns": [
+        "집단",
+        "인원(명)",
+        "첫 PR 머지 중앙값(영업일)",
+        "원문 위치"
+      ],
+      "rows": [
+        {
+          "cells": [
+            "사무실 팀",
+            "39",
+            "6",
+            "결과 표 P09"
+          ],
+          "claims": [
+            "C08",
+            "C06"
+          ]
+        },
+        {
+          "cells": [
+            "원격 팀(멘토 페어링 없음)",
+            "28",
+            "11",
+            "결과 표 P10"
+          ],
+          "claims": [
+            "C09"
+          ]
+        },
+        {
+          "cells": [
+            "원격 팀(멘토 페어링 있음)",
+            "19",
+            "7",
+            "결과 표 P11"
+          ],
+          "claims": [
+            "C10"
+          ]
+        },
+        {
+          "cells": [
+            "원격 팀 전체",
+            "47",
+            "9",
+            "방법 P06 · 본문 P12"
+          ],
+          "claims": [
+            "C05",
+            "C11"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "V02",
+      "kind": "diagram",
+      "title": "결론 → 근거 사슬과 한계가 걸리는 지점",
+      "direction": "LR",
+      "nodes": [
+        {
+          "id": "D1",
+          "label": "첫 PR 머지까지 중앙값 (집단별)",
+          "group": "결과",
+          "claims": [
+            "C08",
+            "C09",
+            "C10"
+          ]
+        },
+        {
+          "id": "D2",
+          "label": "리뷰 코멘트 2.4배",
+          "group": "결과",
+          "claims": [
+            "C13"
+          ]
+        },
+        {
+          "id": "I1",
+          "label": "멘토 페어링이 온보딩 지연을 해소한다",
+          "group": "해석",
+          "claims": [
+            "C14"
+          ]
+        },
+        {
+          "id": "I2",
+          "label": "리뷰 코멘트가 관습 습득을 빠르게 함(추정)",
+          "group": "해석",
+          "claims": [
+            "C15",
+            "C16"
+          ]
+        },
+        {
+          "id": "R1",
+          "label": "모든 원격 팀 멘토 페어링 의무화",
+          "group": "권고",
+          "claims": [
+            "C25"
+          ]
+        },
+        {
+          "id": "R2",
+          "label": "온보딩 기간이 사무실 팀 수준으로 줄어듦(예측)",
+          "group": "권고",
+          "claims": [
+            "C26"
+          ]
+        },
+        {
+          "id": "L1",
+          "label": "희망한 팀만 멘토 페어링 운영 · 자기 선택 가능성",
+          "group": "한계",
+          "claims": [
+            "C21",
+            "C22"
+          ]
+        },
+        {
+          "id": "L2",
+          "label": "PR 크기 기준이 달라 직접 비교하기 어렵다",
+          "group": "한계",
+          "claims": [
+            "C23",
+            "C24"
+          ]
+        },
+        {
+          "id": "L3",
+          "label": "표본 86명 · 무작위 아닌 팀 배정",
+          "group": "한계",
+          "claims": [
+            "C19",
+            "C20"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "D1",
+          "to": "I1",
+          "kind": "association",
+          "label": "해석의 근거",
+          "inferred": true,
+          "inference": "I01"
+        },
+        {
+          "from": "D2",
+          "to": "I2",
+          "kind": "association",
+          "label": "해석의 근거",
+          "inferred": true,
+          "inference": "I01"
+        },
+        {
+          "from": "I2",
+          "to": "I1",
+          "kind": "causal",
+          "label": "이유로 보임",
+          "claims": [
+            "C16"
+          ]
+        },
+        {
+          "from": "I1",
+          "to": "R1",
+          "kind": "association",
+          "label": "권고의 근거",
+          "inferred": true,
+          "inference": "I02"
+        },
+        {
+          "from": "R1",
+          "to": "R2",
+          "kind": "conditional",
+          "label": "의무화하면",
+          "claims": [
+            "C26"
+          ]
+        },
+        {
+          "from": "L1",
+          "to": "I1",
+          "kind": "association",
+          "label": "인과 해석 약화",
+          "inferred": true,
+          "inference": "I03"
+        },
+        {
+          "from": "L3",
+          "to": "I1",
+          "kind": "association",
+          "label": "인과 해석 약화",
+          "inferred": true,
+          "inference": "I03"
+        },
+        {
+          "from": "L2",
+          "to": "D1",
+          "kind": "association",
+          "label": "팀 간 비교 약화",
+          "inferred": true,
+          "inference": "I03"
+        }
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "id": "S01",
+      "text": "원격 팀 신입 개발자의 첫 PR 머지까지 중앙값은 9영업일로, 사무실 팀(6영업일)보다 3영업일 길었다.",
+      "claims": [
+        "C11",
+        "C08",
+        "C12"
+      ]
+    },
+    {
+      "id": "S02",
+      "text": "멘토 페어링 원격 팀의 중앙값은 7영업일, 멘토 페어링 없는 원격 팀은 11영업일이었다. 원문은 멘토 페어링 원격 팀과 사무실 팀의 차이가 거의 없었다고 요약한다.",
+      "claims": [
+        "C10",
+        "C09",
+        "C03"
+      ]
+    },
+    {
+      "id": "S03",
+      "text": "저자는 멘토 페어링이 원격 근무의 온보딩 지연을 해소한다고 해석했고, 그 이유를 리뷰 코멘트로 관습을 빨리 익히는 효과로 추정했다.",
+      "claims": [
+        "C14",
+        "C15",
+        "C16"
+      ]
+    },
+    {
+      "id": "S04",
+      "text": "원문 한계 절은 표본이 작고 팀 배정이 무작위가 아니며, 멘토 페어링 팀이 원래 온보딩에 관심이 많았을 가능성과 팀 간 직접 비교가 어렵다는 점을 밝힌다.",
+      "claims": [
+        "C19",
+        "C20",
+        "C22",
+        "C24"
+      ]
+    },
+    {
+      "id": "S05",
+      "text": "저자는 모든 원격 팀에 멘토 페어링 의무화를 권고하고, 그러면 온보딩 기간이 사무실 팀 수준으로 줄어들 것이라고 예측한다.",
+      "claims": [
+        "C25",
+        "C26"
+      ]
+    }
+  ],
+  "narrative": {
+    "headline": {
+      "text": "이 사내 조사 보고서는 원격 팀 신입 개발자가 사무실 팀보다 첫 PR 머지까지 더 오래 걸렸지만, 멘토 페어링을 운영한 원격 팀에서는 그 차이가 거의 없었다고 보고한다. 작성자는 모든 원격 팀에 멘토 페어링을 의무화해야 한다고 권고한다.",
+      "claims": [
+        "C02",
+        "C03",
+        "C25"
+      ]
+    },
+    "sections": [
+      {
+        "id": "N01",
+        "title": "무엇을, 어떻게 조사했나",
+        "blocks": [
+          {
+            "kind": "text",
+            "sentences": [
+              {
+                "text": "보고서는 스스로 가상의 회사 데이터를 쓴 예시 문서이며, 수치는 실제 통계가 아니라고 밝힌다.",
+                "claims": [
+                  "C01"
+                ]
+              },
+              {
+                "text": "조사는 2024년 3월부터 2025년 2월까지 입사한 신입 개발자 86명의 저장소 기록을 분석했다.",
+                "claims": [
+                  "C04"
+                ]
+              },
+              {
+                "text": "이 가운데 원격 팀 소속이 47명, 사무실 팀 소속이 39명이다.",
+                "claims": [
+                  "C05",
+                  "C06"
+                ]
+              },
+              {
+                "text": "온보딩 기간을 나타내는 대리 지표로는 첫 PR 머지까지 걸린 영업일 수를 썼다.",
+                "claims": [
+                  "C07"
+                ]
+              },
+              {
+                "text": "PR(풀 리퀘스트)은 개발자가 만든 코드 변경을 공용 저장소에 합쳐 달라고 요청하는 단위이고, 머지는 그 변경이 실제로 합쳐지는 것을 뜻한다.",
+                "context": [
+                  "K01"
+                ]
+              },
+              {
+                "text": "대리 지표란 직접 재기 어려운 대상을 대신해 재는, 그 대상과 관련된 다른 값을 말한다.",
+                "context": [
+                  "K02"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "N02",
+        "title": "원격 팀은 얼마나 더 오래 걸렸나",
+        "blocks": [
+          {
+            "kind": "text",
+            "sentences": [
+              {
+                "text": "보고서의 핵심 결과는 원격 팀 신입 개발자가 사무실 팀보다 첫 PR 머지까지 더 오래 걸렸다는 것이다.",
+                "claims": [
+                  "C02"
+                ]
+              },
+              {
+                "text": "중앙값으로 보면 사무실 팀은 6영업일, 원격 팀 전체는 9영업일로, 원격 팀이 3영업일 길었다.",
+                "claims": [
+                  "C08",
+                  "C11",
+                  "C12"
+                ]
+              },
+              {
+                "text": "중앙값은 값을 크기 순서로 늘어놓았을 때 한가운데에 오는 값으로, 극단적인 값의 영향을 덜 받는다.",
+                "context": [
+                  "K03"
+                ]
+              },
+              {
+                "text": "원격 팀을 멘토 페어링 여부로 나누면 멘토 페어링 없는 원격 팀은 11영업일, 멘토 페어링 원격 팀은 7영업일이었다.",
+                "claims": [
+                  "C09",
+                  "C10"
+                ]
+              },
+              {
+                "text": "보고서는 멘토 페어링 원격 팀과 사무실 팀 사이에는 차이가 거의 없었다고 요약한다.",
+                "claims": [
+                  "C03"
+                ]
+              },
+              {
+                "text": "멘토 페어링은 흔히 신입을 경험 있는 동료(멘토)와 짝지어 함께 일하게 하는 방식을 가리킨다.",
+                "context": [
+                  "K04"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "visual",
+            "ref": "V01",
+            "caption": "보고서가 제시한 집단별 인원과 첫 PR 머지까지 중앙값"
+          },
+          {
+            "kind": "text",
+            "sentences": [
+              {
+                "text": "또 멘토 페어링 팀의 신입 개발자는 첫 달에 코드 리뷰 코멘트를 평균 2.4배 더 많이 받았다고 보고서는 적는다(리뷰 시스템 로그 기준).",
+                "claims": [
+                  "C13"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "N03",
+        "title": "작성자는 이 결과를 어떻게 해석하나",
+        "blocks": [
+          {
+            "kind": "text",
+            "sentences": [
+              {
+                "text": "작성자는 멘토 페어링이 원격 근무의 온보딩 지연을 해소한다고 해석한다.",
+                "claims": [
+                  "C14"
+                ]
+              },
+              {
+                "text": "그 이유는 리뷰 코멘트가 많을수록 신입 개발자가 코드베이스의 관습을 빨리 익히기 때문으로 보인다고 추정한다.",
+                "claims": [
+                  "C15",
+                  "C16"
+                ]
+              },
+              {
+                "text": "작성자는 외부 연구도 비슷한 경향을 보고한다고 덧붙인다.",
+                "claims": [
+                  "C17"
+                ]
+              },
+              {
+                "text": "예로 드는 것은 GitLab의 2023 원격 근무 보고서로, 이 보고서가 원격 신입의 생산성 도달 시간이 더 길다고 밝혔다는 것이다.",
+                "claims": [
+                  "C18"
+                ]
+              },
+              {
+                "text": "GitLab은 코드 저장소와 개발 협업 도구를 제공하는 소프트웨어 회사다.",
+                "context": [
+                  "K05"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "N04",
+        "title": "보고서가 스스로 밝힌 한계",
+        "blocks": [
+          {
+            "kind": "points",
+            "sentences": [
+              {
+                "text": "작성자는 표본이 86명으로 작다고 적는다.",
+                "claims": [
+                  "C19"
+                ]
+              },
+              {
+                "text": "팀 배정은 무작위가 아니었다.",
+                "claims": [
+                  "C20"
+                ]
+              },
+              {
+                "text": "멘토 페어링은 희망한 팀만 운영했다. 작성자는 그 팀들이 원래 온보딩에 관심이 많은 팀이었을 가능성이 있다고 적는다.",
+                "claims": [
+                  "C21",
+                  "C22"
+                ]
+              },
+              {
+                "text": "보고서는 팀마다 PR 크기 기준이 달라서 첫 PR 머지 시점을 팀 간에 직접 비교하기 어렵다고 적는다.",
+                "claims": [
+                  "C23",
+                  "C24"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "N05",
+        "title": "작성자는 무엇을 하자고 하나",
+        "blocks": [
+          {
+            "kind": "text",
+            "sentences": [
+              {
+                "text": "작성자는 모든 원격 팀에 멘토 페어링을 의무화해야 한다고 권고한다.",
+                "claims": [
+                  "C25"
+                ]
+              },
+              {
+                "text": "그렇게 하면 원격 팀의 온보딩 기간이 사무실 팀 수준으로 줄어들 것이라고 작성자는 예측한다.",
+                "claims": [
+                  "C26"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "visual",
+            "ref": "V02",
+            "caption": "결과에서 해석·권고로 이어지는 흐름과 원문 한계가 걸리는 지점 (점선은 원문에 없는 연결)"
+          }
+        ]
+      }
+    ]
+  },
+  "context": [
+    {
+      "id": "K01",
+      "term": "PR · 머지",
+      "text": "PR(풀 리퀘스트)은 개발자가 만든 코드 변경을 공용 저장소에 합쳐 달라고 요청하는 단위이고, 머지는 그 변경이 실제로 합쳐지는 것이다.",
+      "reason": "원문은 지표 이름에 PR 머지를 설명 없이 쓴다."
+    },
+    {
+      "id": "K02",
+      "term": "대리 지표",
+      "text": "직접 재기 어려운 대상을 대신해 재는, 그 대상과 관련된 다른 값.",
+      "reason": "원문은 온보딩 기간을 직접 재지 않고 대리 지표를 쓴다고만 말한다."
+    },
+    {
+      "id": "K03",
+      "term": "중앙값",
+      "text": "값을 크기 순서로 늘어놓았을 때 한가운데에 오는 값. 평균보다 극단적인 값의 영향을 덜 받는다.",
+      "reason": "결과가 모두 중앙값으로 제시된다."
+    },
+    {
+      "id": "K04",
+      "term": "멘토 페어링",
+      "text": "흔히 신입을 경험 있는 동료(멘토)와 짝지어 함께 일하게 하는 방식을 가리킨다.",
+      "reason": "원문은 멘토 페어링이 무엇인지 설명하지 않는다."
+    },
+    {
+      "id": "K05",
+      "term": "GitLab",
+      "text": "코드 저장소와 개발 협업 도구를 제공하는 소프트웨어 회사.",
+      "reason": "원문은 외부 근거로 GitLab 보고서를 들지만 GitLab이 무엇인지 말하지 않는다."
+    }
+  ]
+}
